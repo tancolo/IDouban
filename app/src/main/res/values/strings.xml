@@ -8,7 +8,9 @@
     <string name="hello_movies_fragment">电影 Fragment</string>
     <string name="hello_books_fragment">读书 Fragment</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hot_movies">影院热映</string>
+    <string name="coming_movies">院线即将上映</string>
+    <string name="string_no_note">暂无评分</string>
+
 
 </resources>
