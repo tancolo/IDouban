@@ -3,13 +3,26 @@ package com.shrimpcolo.johnnytam.idouban;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.shrimpcolo.johnnytam.idouban.book.BooksFragment;
+import com.shrimpcolo.johnnytam.idouban.movie.MoviesFragment;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeActivity extends AppCompatActivity {
+    public static final String TAG = "COLO";
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +39,54 @@ public class HomeActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        //初始化控件
+        mViewPager = (ViewPager) findViewById(R.id.douban_view_pager);
+        setupViewPager(mViewPager);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.douban_sliding_tabs);
+        if(tabLayout != null) {
+            tabLayout.addTab(tabLayout.newTab());
+            tabLayout.addTab(tabLayout.newTab());
+            tabLayout.setupWithViewPager(mViewPager);
+        }
+
+    }
+
+    private void setupViewPager(ViewPager viewPager){
+        DoubanPagerAdapter pagerAdapter = new DoubanPagerAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragment(new MoviesFragment(), getApplicationContext().getResources().getString(R.string.tab_movies_fragment));
+        pagerAdapter.addFragment(new BooksFragment(), getApplicationContext().getResources().getString(R.string.tab_books_fragment));
+        viewPager.setAdapter(pagerAdapter);
+    }
+
+    static class DoubanPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFrgmentTitles = new ArrayList<>();
+
+        public DoubanPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFrgmentTitles.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFrgmentTitles.get(position);
+        }
     }
 
     @Override

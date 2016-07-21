@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">IDouban</string>
     <string name="action_settings">Settings</string>
+
+    <string name="tab_movies_fragment">电影</string>
+    <string name="tab_books_fragment">读书</string>
+
+    <string name="hello_movies_fragment">电影 Fragment</string>
+    <string name="hello_books_fragment">读书 Fragment</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
