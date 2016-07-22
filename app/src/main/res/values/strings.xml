@@ -11,6 +11,7 @@
     <string name="hot_movies">影院热映</string>
     <string name="coming_movies">院线即将上映</string>
     <string name="string_no_note">暂无评分</string>
+    <string name="title_activity_movie_detail">MovieDetailActivity</string>
 
 
 </resources>
