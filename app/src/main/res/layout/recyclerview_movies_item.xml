@@ -40,6 +40,7 @@
                 style="?attr/ratingBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:rating="3"
                 android:isIndicator="true" />
 
             <TextView

@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
@@ -87,7 +88,7 @@ public class MoviesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         if (mRecyclerView != null) {
-            mRecyclerView.setHasFixedSize(true);
+//            mRecyclerView.setHasFixedSize(true);
             final GridLayoutManager layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
             mRecyclerView.setLayoutManager(layoutManager);
 
