@@ -23,6 +23,9 @@
         <activity
             android:name=".movie.MovieDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".movie.WebViewActivity"
+            android:theme="@style/WebsiteActivityNoActionBar" />
     </application>
 
 </manifest>

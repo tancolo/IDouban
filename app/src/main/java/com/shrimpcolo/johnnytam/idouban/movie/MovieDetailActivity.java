@@ -21,6 +21,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private Movies movies;
     private ViewPager viewPager;
+    private static final int TYPE_MOVIE_INFO = 0;
+    private static final int TYPE_MOVIE_WEBSITE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +59,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         MoviePagerAdapter adapter = new MoviePagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(MovieDetailFragment.newInstance(getMovieInfo()), "影片信息");
-        adapter.addFragment(MovieDetailFragment.newInstance(movies.getAlt()), "简介");
+        adapter.addFragment(MovieDetailFragment.newInstance(getMovieInfo(), TYPE_MOVIE_INFO), "影片信息");
+        adapter.addFragment(MovieDetailFragment.newInstance(movies.getAlt(), TYPE_MOVIE_WEBSITE), "简介");
         viewPager.setAdapter(adapter);
     }
 
