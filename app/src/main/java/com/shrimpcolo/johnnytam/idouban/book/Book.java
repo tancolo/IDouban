@@ -1,11 +1,12 @@
 package com.shrimpcolo.johnnytam.idouban.book;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Johnny Tam on 2016/7/27.
  */
-public class Book {
+public class Book implements Serializable{
     /**
      * max : 10
      * numRaters : 12248
@@ -251,7 +252,7 @@ public class Book {
         this.translator = translator;
     }
 
-    public static class RatingBean {
+    public static class RatingBean implements Serializable{
         private int max;
         private int numRaters;
         private String average;
@@ -290,7 +291,7 @@ public class Book {
         }
     }
 
-    public static class ImagesBean {
+    public static class ImagesBean implements Serializable{
         private String small;
         private String large;
         private String medium;
@@ -320,7 +321,7 @@ public class Book {
         }
     }
 
-    public static class TagsBean {
+    public static class TagsBean implements Serializable{
         private int count;
         private String name;
         private String title;

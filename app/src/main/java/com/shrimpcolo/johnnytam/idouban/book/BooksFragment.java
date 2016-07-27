@@ -153,6 +153,8 @@ public class BooksFragment extends Fragment {
         TextView bookPubDate;
         TextView bookPages;
         TextView bookPrice;
+        Book book;
+
 
         public BookViewHolder(View itemView) {
             super(itemView);
@@ -170,6 +172,9 @@ public class BooksFragment extends Fragment {
         }
 
         public void updateBook(Book book) {
+
+            if (book == null) return;
+            this.book = book;
 
             Context context = itemView.getContext();
             if (context == null) return;
@@ -199,6 +204,21 @@ public class BooksFragment extends Fragment {
         public void onClick(View v) {
             Log.e(HomeActivity.TAG, "==>Book onClick....Item");
 
+            if (book == null) return;
+            if (itemView == null) return;
+
+            Context context = itemView.getContext();
+            if (context == null) return;
+
+            Intent intent = new Intent(context, BookDetailActivity.class);
+            intent.putExtra("book", book);
+
+            if (context instanceof Activity) {
+                Activity activity = (Activity) context;
+
+                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, bookImage, "cover").toBundle();
+                ActivityCompat.startActivity(activity, intent, bundle);
+            }
         }
     }
 
