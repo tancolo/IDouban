@@ -1,30 +1,22 @@
 package com.shrimpcolo.johnnytam.idouban.book;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.api.DoubanManager;
 import com.shrimpcolo.johnnytam.idouban.api.IDoubanService;
-import com.shrimpcolo.johnnytam.idouban.common.Adapter;
-import com.shrimpcolo.johnnytam.idouban.common.ViewHolder;
-import com.squareup.picasso.Picasso;
+import com.shrimpcolo.johnnytam.idouban.common.BaseAdapter;
+import com.shrimpcolo.johnnytam.idouban.common.ModelAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +32,7 @@ public class BooksFragment extends Fragment {
     //private String mBookName = "黑客与画家";
     private List<Book> mBookList = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    private Adapter mBookAdapter;
+    private BaseAdapter mBookAdapter;
 
     public BooksFragment() {
         // Required empty public constructor
@@ -89,12 +81,7 @@ public class BooksFragment extends Fragment {
             final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
             mRecyclerView.setLayoutManager(layoutManager);
 
-            mBookAdapter = new Adapter<>(mBookList, R.layout.recyclerview_book_item, new ViewHolder.Builder<BookViewHolder>() {
-                @Override
-                public BookViewHolder build(View itemView) {
-                    return new BookViewHolder(itemView);
-                }
-            });
+            mBookAdapter = new ModelAdapter<>(mBookList, R.layout.recyclerview_book_item);
 
             mRecyclerView.setAdapter(mBookAdapter);
         }
@@ -103,79 +90,6 @@ public class BooksFragment extends Fragment {
     private void loadBooks(Callback<BookInfo> callback) {
         IDoubanService movieService = DoubanManager.createDoubanService();
         movieService.searchBooks("黑客与画家").enqueue(callback);
-    }
-
-    static class BookViewHolder extends ViewHolder<Book> implements View.OnClickListener {
-
-        CardView cardView;
-        ImageView bookImage;
-        TextView bookTitle;
-        TextView bookAuthor;
-        TextView bookSubTitle;
-        TextView bookPubDate;
-        TextView bookPages;
-        TextView bookPrice;
-
-        public BookViewHolder(View itemView) {
-            super(itemView);
-
-            cardView = (CardView) itemView.findViewById(R.id.cardview);
-            bookImage = (ImageView) itemView.findViewById(R.id.book_cover);
-            bookTitle = (TextView) itemView.findViewById(R.id.txt_title);
-            bookAuthor = (TextView) itemView.findViewById(R.id.txt_author);
-            bookSubTitle = (TextView) itemView.findViewById(R.id.txt_subTitle);
-            bookPubDate = (TextView) itemView.findViewById(R.id.txt_pubDate);
-            bookPrice = (TextView) itemView.findViewById(R.id.txt_prices);
-            bookPages = (TextView) itemView.findViewById(R.id.txt_pages);
-
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        protected void onBindItem(Book book) {
-            Context context = itemView.getContext();
-            if (context == null) return;
-
-            //get the prefix string
-            String prefixSubTitle = context.getString(R.string.prefix_subtitle);
-            String prefixAuthor = context.getString(R.string.prefix_author);
-            String prefixPubDate = context.getString(R.string.prefix_pubdata);
-            String prefixPages = context.getString(R.string.prefix_pages);
-            String prefixPrice = context.getString(R.string.prefix_price);
-
-            bookTitle.setText(book.getTitle());
-            bookAuthor.setText(String.format(prefixAuthor, book.getAuthor()));
-            bookSubTitle.setText(String.format(prefixSubTitle, book.getSubtitle()));
-            bookPubDate.setText(String.format(prefixPubDate, book.getPubdate()));
-            bookPages.setText(String.format(prefixPages, book.getPages()));
-            bookPrice.setText(String.format(prefixPrice, book.getPrice()));
-
-            Picasso.with(context)
-                    .load(book.getImages().getLarge())
-                    .placeholder(context.getResources().getDrawable(R.mipmap.ic_launcher))
-                    .into(bookImage);
-        }
-
-        @Override
-        public void onClick(View v) {
-            Log.e(HomeActivity.TAG, "==>Book onClick....Item");
-
-            if (itemContent == null) return;
-            if (itemView == null) return;
-
-            Context context = itemView.getContext();
-            if (context == null) return;
-
-            Intent intent = new Intent(context, BookDetailActivity.class);
-            intent.putExtra("book", itemContent);
-
-            if (context instanceof Activity) {
-                Activity activity = (Activity) context;
-
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, bookImage, "cover").toBundle();
-                ActivityCompat.startActivity(activity, intent, bundle);
-            }
-        }
     }
 
 }

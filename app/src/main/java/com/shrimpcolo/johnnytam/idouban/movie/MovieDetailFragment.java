@@ -12,8 +12,6 @@ import android.widget.TextView;
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
 
-import org.w3c.dom.ProcessingInstruction;
-
 
 /**
  * A simple {@link Fragment} subclass.

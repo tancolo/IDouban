@@ -7,16 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.shrimpcolo.johnnytam.idouban.common.BaseViewHolder.Builder;
+
 import java.util.List;
 
-public class Adapter<T, VH extends ViewHolder<T>> extends RecyclerView.Adapter<VH> {
+public class BaseAdapter<T, VH extends BaseViewHolder<T>> extends RecyclerView.Adapter<VH> {
     List<T> data;
-    ViewHolder.Builder<VH> builder;
+    Builder<VH> builder;
 
     @LayoutRes
     int layoutResId;
 
-    public Adapter(@NonNull List<T> data, @LayoutRes int layoutResId, ViewHolder.Builder<VH> builder) {
+    public BaseAdapter(@NonNull List<T> data, @LayoutRes int layoutResId, Builder<VH> builder) {
         this.data = data;
         this.layoutResId = layoutResId;
         this.builder = builder;

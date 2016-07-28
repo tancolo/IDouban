@@ -7,6 +7,7 @@ import java.util.List;
  * Created by Johnny Tam on 2016/7/18.
  */
 public class Movies implements Serializable {
+    private static final long serialVersionUID = -3106907719564511460L;
     /**
      * max : 10
      * average : 5.3

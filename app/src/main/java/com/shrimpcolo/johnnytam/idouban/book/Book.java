@@ -7,6 +7,7 @@ import java.util.List;
  * Created by Johnny Tam on 2016/7/27.
  */
 public class Book implements Serializable{
+    private static final long serialVersionUID = 8440190749642019291L;
     /**
      * max : 10
      * numRaters : 12248
