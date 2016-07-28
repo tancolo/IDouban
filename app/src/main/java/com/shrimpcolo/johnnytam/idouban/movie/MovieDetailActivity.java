@@ -20,7 +20,6 @@ import java.util.List;
 public class MovieDetailActivity extends AppCompatActivity {
 
     private Movies movies;
-    private ViewPager viewPager;
     private static final int TYPE_MOVIE_INFO = 0;
     private static final int TYPE_MOVIE_WEBSITE = 1;
 
@@ -34,7 +33,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         //find the UI view
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.movie_collapsing_toolbar);
         ImageView movieImage = (ImageView) findViewById(R.id.movie_image);
-        viewPager = (ViewPager) findViewById(R.id.movie_viewpager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.movie_viewpager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.movie_sliding_tabs);
 
         //init view
@@ -59,8 +58,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         MoviePagerAdapter adapter = new MoviePagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(MovieDetailFragment.newInstance(getMovieInfo(), TYPE_MOVIE_INFO), "影片信息");
-        adapter.addFragment(MovieDetailFragment.newInstance(movies.getAlt(), TYPE_MOVIE_WEBSITE), "简介");
+        adapter.addFragment(MovieDetailFragment.newInstance(getMovieInfo(), TYPE_MOVIE_INFO), getString(R.string.movie_info));
+        adapter.addFragment(MovieDetailFragment.newInstance(movies.getAlt(), TYPE_MOVIE_WEBSITE), getString(R.string.movie_description));
         viewPager.setAdapter(adapter);
     }
 
@@ -70,7 +69,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         Resources resources = getApplicationContext().getResources();
 
         movieBuilder.append(resources.getString(R.string.movie_directors));
-        for(Movies.DirectorsBean director : movies.getDirectors()) {
+        for (Movies.DirectorsBean director : movies.getDirectors()) {
             movieBuilder.append(director.getName());
             movieBuilder.append(" ");
         }
@@ -78,7 +77,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         //主演
         movieBuilder.append(resources.getString(R.string.movie_casts));
-        for(Movies.CastsBean cast : movies.getCasts()){
+        for (Movies.CastsBean cast : movies.getCasts()) {
             movieBuilder.append(cast.getName());
             movieBuilder.append(" ");
         }
@@ -94,7 +93,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieBuilder.append("\n");
 
         movieBuilder.append(resources.getString(R.string.movie_genres));
-        for(int index = 0; index < movies.getGenres().size(); index++) {
+        for (int index = 0; index < movies.getGenres().size(); index++) {
             movieBuilder.append(movies.getGenres().get(index));
             movieBuilder.append(" / ");
         }

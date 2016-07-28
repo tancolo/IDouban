@@ -5,13 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,16 +16,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.api.DoubanManager;
 import com.shrimpcolo.johnnytam.idouban.api.IDoubanService;
-import com.shrimpcolo.johnnytam.idouban.movie.HotMoviesInfo;
-import com.shrimpcolo.johnnytam.idouban.movie.MovieDetailActivity;
-import com.shrimpcolo.johnnytam.idouban.movie.Movies;
+import com.shrimpcolo.johnnytam.idouban.common.Adapter;
+import com.shrimpcolo.johnnytam.idouban.common.ViewHolder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -45,7 +40,7 @@ public class BooksFragment extends Fragment {
     //private String mBookName = "黑客与画家";
     private List<Book> mBookList = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    private BookAdapter mBookAdapter;
+    private Adapter mBookAdapter;
 
     public BooksFragment() {
         // Required empty public constructor
@@ -60,7 +55,7 @@ public class BooksFragment extends Fragment {
             @Override
             public void onResponse(Call<BookInfo> call, Response<BookInfo> response) {
                 mBookList = response.body().getBooks();
-                //debug
+
                 Log.e(HomeActivity.TAG, "===>Book Response, size = " + mBookList.size());
                 mBookAdapter.setData(mBookList);
             }
@@ -94,7 +89,12 @@ public class BooksFragment extends Fragment {
             final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
             mRecyclerView.setLayoutManager(layoutManager);
 
-            mBookAdapter = new BookAdapter(getContext(), mBookList, R.layout.recyclerview_book_item);
+            mBookAdapter = new Adapter<>(mBookList, R.layout.recyclerview_book_item, new ViewHolder.Builder<BookViewHolder>() {
+                @Override
+                public BookViewHolder build(View itemView) {
+                    return new BookViewHolder(itemView);
+                }
+            });
 
             mRecyclerView.setAdapter(mBookAdapter);
         }
@@ -105,45 +105,7 @@ public class BooksFragment extends Fragment {
         movieService.searchBooks("黑客与画家").enqueue(callback);
     }
 
-    static class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
-        private List<Book> mBookList;
-        private Context mContext;
-
-        @LayoutRes
-        private int layoutResId;
-
-        public BookAdapter(Context context, @NonNull List<Book> bookList, @LayoutRes int layoutResId) {
-            this.mBookList = bookList;
-            this.layoutResId = layoutResId;
-            this.mContext = context;
-        }
-
-        @Override
-        public BookViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(mContext).inflate(layoutResId, parent, false);
-            return new BookViewHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(BookViewHolder holder, int position) {
-            if (holder == null) return;
-
-            holder.updateBook(mBookList.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mBookList.size();
-        }
-
-        public void setData(List<Book> bookList) {
-            this.mBookList = bookList;
-            notifyDataSetChanged();
-        }
-    }
-
-
-    static class BookViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class BookViewHolder extends ViewHolder<Book> implements View.OnClickListener {
 
         CardView cardView;
         ImageView bookImage;
@@ -153,8 +115,6 @@ public class BooksFragment extends Fragment {
         TextView bookPubDate;
         TextView bookPages;
         TextView bookPrice;
-        Book book;
-
 
         public BookViewHolder(View itemView) {
             super(itemView);
@@ -171,11 +131,8 @@ public class BooksFragment extends Fragment {
             itemView.setOnClickListener(this);
         }
 
-        public void updateBook(Book book) {
-
-            if (book == null) return;
-            this.book = book;
-
+        @Override
+        protected void onBindItem(Book book) {
             Context context = itemView.getContext();
             if (context == null) return;
 
@@ -197,21 +154,20 @@ public class BooksFragment extends Fragment {
                     .load(book.getImages().getLarge())
                     .placeholder(context.getResources().getDrawable(R.mipmap.ic_launcher))
                     .into(bookImage);
-
         }
 
         @Override
         public void onClick(View v) {
             Log.e(HomeActivity.TAG, "==>Book onClick....Item");
 
-            if (book == null) return;
+            if (itemContent == null) return;
             if (itemView == null) return;
 
             Context context = itemView.getContext();
             if (context == null) return;
 
             Intent intent = new Intent(context, BookDetailActivity.class);
-            intent.putExtra("book", book);
+            intent.putExtra("book", itemContent);
 
             if (context instanceof Activity) {
                 Activity activity = (Activity) context;

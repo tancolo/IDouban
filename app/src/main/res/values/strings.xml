@@ -33,5 +33,10 @@
     <string name="prefix_pages">页数: %1$s</string>
     <string name="prefix_price">定价: %1$s</string>
 
+    <string name="book_content_desc">内容简介</string>
+    <string name="book_author_desc">作者简介</string>
+    <string name="book_Catalog">目录</string>
+
+
     
 </resources>

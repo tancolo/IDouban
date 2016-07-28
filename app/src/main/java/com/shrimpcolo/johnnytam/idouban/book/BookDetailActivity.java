@@ -17,9 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookDetailActivity extends AppCompatActivity {
-
     private Book book;
-    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,31 +28,32 @@ public class BookDetailActivity extends AppCompatActivity {
         book = (Book) getIntent().getSerializableExtra("book");
         //CollapsingToolbarLayout
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(book.getTitle());
-
+        if (collapsingToolbar != null) {
+            collapsingToolbar.setTitle(book.getTitle());
+        }
         ImageView ivImage = (ImageView) findViewById(R.id.ivImage);
         Picasso.with(ivImage.getContext())
                 .load(book.getImages().getLarge())
                 .into(ivImage);
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(mViewPager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         if (tabLayout != null) {
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.addTab(tabLayout.newTab());
-            tabLayout.setupWithViewPager(mViewPager);
+            tabLayout.setupWithViewPager(viewPager);
         }
 
     }
 
     private void setupViewPager(ViewPager viewPager) {
         BookPagerAdapter adapter = new BookPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(BookDetailFragment.newInstance(book.getSummary()), "内容简介");
-        adapter.addFragment(BookDetailFragment.newInstance(book.getAuthor_intro()), "作者简介");
-        adapter.addFragment(BookDetailFragment.newInstance(book.getCatalog()), "目录");
+        adapter.addFragment(BookDetailFragment.newInstance(book.getSummary()), getString(R.string.book_content_desc));
+        adapter.addFragment(BookDetailFragment.newInstance(book.getAuthor_intro()), getString(R.string.book_author_desc));
+        adapter.addFragment(BookDetailFragment.newInstance(book.getCatalog()), getString(R.string.book_Catalog));
         viewPager.setAdapter(adapter);
     }
 
