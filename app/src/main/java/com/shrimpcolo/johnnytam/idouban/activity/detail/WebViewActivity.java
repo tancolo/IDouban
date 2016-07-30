@@ -3,24 +3,28 @@ package com.shrimpcolo.johnnytam.idouban.activity.detail;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.activity.home.BaseActivity;
+import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 
-public class WebViewActivity extends AppCompatActivity {
+public class WebViewActivity extends BaseActivity {
+
+    @Override
+    protected void initVariables() {
+
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initViews(Bundle savedInstanceState) {
         setContentView(R.layout.activity_web_view);
 
         Intent intent = getIntent();
-        final String url =  intent.getStringExtra("website");
+        final String url = intent.getStringExtra("website");
         Log.e(HomeActivity.TAG, "===> website = " + url);
 
         WebView webView = (WebView) findViewById(R.id.douban_webview);

@@ -11,12 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.activity.home.BaseActivity;
 import com.shrimpcolo.johnnytam.idouban.adapter.BasePagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.entity.Movies;
 import com.shrimpcolo.johnnytam.idouban.fragment.MovieDetailFragment;
 import com.squareup.picasso.Picasso;
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends BaseActivity {
 
     private Movies movies;
     private static final int TYPE_MOVIE_INFO = 0;
@@ -25,9 +26,18 @@ public class MovieDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_detail);
 
+
+    }
+
+    @Override
+    protected void initVariables() {
         movies = (Movies) getIntent().getSerializableExtra("movie");
+    }
+
+    @Override
+    protected void initViews(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_movie_detail);
 
         //find the UI view
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.movie_collapsing_toolbar);
@@ -51,7 +61,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.setupWithViewPager(viewPager);
         }
-
     }
 
     private void setupViewPager(ViewPager viewPager) {

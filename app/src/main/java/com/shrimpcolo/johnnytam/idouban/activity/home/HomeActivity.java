@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,14 +17,19 @@ import com.shrimpcolo.johnnytam.idouban.adapter.BasePagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.fragment.BooksFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.MoviesFragment;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
     public static final String TAG = "COLO";
-    private ViewPager mViewPager;
+//    private ViewPager mViewPager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initVariables() {
+
+    }
+
+    @Override
+    protected void initViews(Bundle savedInstanceState) {
         setContentView(R.layout.activity_home);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -39,16 +43,15 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         //初始化控件
-        mViewPager = (ViewPager) findViewById(R.id.douban_view_pager);
-        setupViewPager(mViewPager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.douban_view_pager);
+        setupViewPager(viewPager);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.douban_sliding_tabs);
         if (tabLayout != null) {
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.addTab(tabLayout.newTab());
-            tabLayout.setupWithViewPager(mViewPager);
+            tabLayout.setupWithViewPager(viewPager);
         }
-
     }
 
     private void setupViewPager(ViewPager viewPager) {

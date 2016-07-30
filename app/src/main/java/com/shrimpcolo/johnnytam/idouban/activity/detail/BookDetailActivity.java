@@ -6,25 +6,28 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.activity.home.BaseActivity;
 import com.shrimpcolo.johnnytam.idouban.adapter.BasePagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.entity.Book;
 import com.shrimpcolo.johnnytam.idouban.fragment.BookDetailFragment;
 import com.squareup.picasso.Picasso;
 
-public class BookDetailActivity extends AppCompatActivity {
+public class BookDetailActivity extends BaseActivity {
     private Book book;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_detail);
-
+    protected void initVariables() {
         //get the content from the intent.
         book = (Book) getIntent().getSerializableExtra("book");
+    }
+
+    @Override
+    protected void initViews(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_book_detail);
+
         //CollapsingToolbarLayout
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         if (collapsingToolbar != null) {
@@ -45,7 +48,6 @@ public class BookDetailActivity extends AppCompatActivity {
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.setupWithViewPager(viewPager);
         }
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
