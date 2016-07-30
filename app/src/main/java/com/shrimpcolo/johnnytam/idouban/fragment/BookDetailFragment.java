@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.book;
+package com.shrimpcolo.johnnytam.idouban.fragment;
 
 
 import android.os.Bundle;

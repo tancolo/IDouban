@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.movie;
+package com.shrimpcolo.johnnytam.idouban.activity.detail;
 
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.entity.Movies;
+import com.shrimpcolo.johnnytam.idouban.fragment.MovieDetailFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

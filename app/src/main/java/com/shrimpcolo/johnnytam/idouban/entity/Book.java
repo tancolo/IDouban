@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.book;
+package com.shrimpcolo.johnnytam.idouban.entity;
 
 import java.io.Serializable;
 import java.util.List;

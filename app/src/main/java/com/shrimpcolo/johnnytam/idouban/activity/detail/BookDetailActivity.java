@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.book;
+package com.shrimpcolo.johnnytam.idouban.activity.detail;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.fragment.BookDetailFragment;
+import com.shrimpcolo.johnnytam.idouban.entity.Book;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

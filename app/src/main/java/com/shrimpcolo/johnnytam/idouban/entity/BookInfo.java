@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.book;
+package com.shrimpcolo.johnnytam.idouban.entity;
 
 import java.util.List;
 

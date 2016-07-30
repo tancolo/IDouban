@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".HomeActivity"
+            android:name=".activity.home.HomeActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -21,14 +21,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".movie.MovieDetailActivity"
+            android:name=".activity.detail.MovieDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".movie.WebViewActivity"
+            android:name=".activity.detail.WebViewActivity"
             android:theme="@style/WebsiteActivityNoActionBar" />
 
         <activity
-            android:name=".book.BookDetailActivity"
+            android:name=".activity.detail.BookDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
     </application>

@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.movie;
+package com.shrimpcolo.johnnytam.idouban.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,9 +14,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.shrimpcolo.johnnytam.idouban.HomeActivity;
+import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
-import com.shrimpcolo.johnnytam.idouban.common.IModelView;
+import com.shrimpcolo.johnnytam.idouban.interfaces.IModelView;
+import com.shrimpcolo.johnnytam.idouban.activity.detail.MovieDetailActivity;
+import com.shrimpcolo.johnnytam.idouban.entity.Movies;
 import com.squareup.picasso.Picasso;
 
 /**

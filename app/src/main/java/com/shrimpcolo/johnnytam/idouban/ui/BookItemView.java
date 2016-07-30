@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.book;
+package com.shrimpcolo.johnnytam.idouban.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,9 +13,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.shrimpcolo.johnnytam.idouban.HomeActivity;
+import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
-import com.shrimpcolo.johnnytam.idouban.common.IModelView;
+import com.shrimpcolo.johnnytam.idouban.entity.Book;
+import com.shrimpcolo.johnnytam.idouban.activity.detail.BookDetailActivity;
+import com.shrimpcolo.johnnytam.idouban.interfaces.IModelView;
 import com.squareup.picasso.Picasso;
 
 /**

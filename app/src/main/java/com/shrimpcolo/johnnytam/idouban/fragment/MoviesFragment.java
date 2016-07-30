@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.movie;
+package com.shrimpcolo.johnnytam.idouban.fragment;
 
 
 import android.content.Context;
@@ -11,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.shrimpcolo.johnnytam.idouban.HomeActivity;
+import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
-import com.shrimpcolo.johnnytam.idouban.api.DoubanManager;
-import com.shrimpcolo.johnnytam.idouban.api.IDoubanService;
-import com.shrimpcolo.johnnytam.idouban.common.BaseAdapter;
-import com.shrimpcolo.johnnytam.idouban.common.ModelAdapter;
+import com.shrimpcolo.johnnytam.idouban.entity.HotMoviesInfo;
+import com.shrimpcolo.johnnytam.idouban.entity.Movies;
+import com.shrimpcolo.johnnytam.idouban.net.DoubanManager;
+import com.shrimpcolo.johnnytam.idouban.net.IDoubanService;
+import com.shrimpcolo.johnnytam.idouban.adapter.BaseAdapter;
+import com.shrimpcolo.johnnytam.idouban.adapter.ModelAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

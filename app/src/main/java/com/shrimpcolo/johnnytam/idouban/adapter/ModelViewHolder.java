@@ -1,7 +1,9 @@
-package com.shrimpcolo.johnnytam.idouban.common;
+package com.shrimpcolo.johnnytam.idouban.adapter;
 
 import android.support.annotation.NonNull;
 import android.view.View;
+
+import com.shrimpcolo.johnnytam.idouban.interfaces.IModelView;
 
 /**
  * Created by Johnny Tam on 2016/7/18.

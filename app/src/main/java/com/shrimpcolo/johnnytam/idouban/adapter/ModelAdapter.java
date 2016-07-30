@@ -1,11 +1,11 @@
-package com.shrimpcolo.johnnytam.idouban.common;
+package com.shrimpcolo.johnnytam.idouban.adapter;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.view.View;
 
 import java.util.List;
-import com.shrimpcolo.johnnytam.idouban.common.BaseViewHolder.Builder;
+import com.shrimpcolo.johnnytam.idouban.adapter.BaseViewHolder.Builder;
 /**
  * Created by Johnny Tam on 2016/7/18.
  */

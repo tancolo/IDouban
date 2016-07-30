@@ -1,7 +1,7 @@
-package com.shrimpcolo.johnnytam.idouban.api;
+package com.shrimpcolo.johnnytam.idouban.net;
 
-import com.shrimpcolo.johnnytam.idouban.book.BookInfo;
-import com.shrimpcolo.johnnytam.idouban.movie.HotMoviesInfo;
+import com.shrimpcolo.johnnytam.idouban.entity.BookInfo;
+import com.shrimpcolo.johnnytam.idouban.entity.HotMoviesInfo;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

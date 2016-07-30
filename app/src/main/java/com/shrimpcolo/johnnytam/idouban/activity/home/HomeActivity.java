@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban;
+package com.shrimpcolo.johnnytam.idouban.activity.home;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,8 +14,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.shrimpcolo.johnnytam.idouban.book.BooksFragment;
-import com.shrimpcolo.johnnytam.idouban.movie.MoviesFragment;
+import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.adapter.BasePagerAdapter;
+import com.shrimpcolo.johnnytam.idouban.fragment.BooksFragment;
+import com.shrimpcolo.johnnytam.idouban.fragment.MoviesFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,7 @@ public class HomeActivity extends AppCompatActivity {
         setupViewPager(mViewPager);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.douban_sliding_tabs);
-        if(tabLayout != null) {
+        if (tabLayout != null) {
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.setupWithViewPager(mViewPager);
@@ -53,39 +55,22 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void setupViewPager(ViewPager viewPager){
+    private void setupViewPager(ViewPager viewPager) {
         DoubanPagerAdapter pagerAdapter = new DoubanPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(new MoviesFragment(), getApplicationContext().getResources().getString(R.string.tab_movies_fragment));
         pagerAdapter.addFragment(new BooksFragment(), getApplicationContext().getResources().getString(R.string.tab_books_fragment));
         viewPager.setAdapter(pagerAdapter);
     }
 
-    static class DoubanPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFrgmentTitles = new ArrayList<>();
-
+    static class DoubanPagerAdapter extends BasePagerAdapter {
         public DoubanPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
+        @Override
         public void addFragment(Fragment fragment, String title) {
             mFragments.add(fragment);
             mFrgmentTitles.add(title);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFrgmentTitles.get(position);
         }
     }
 

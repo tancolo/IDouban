@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.common;
+package com.shrimpcolo.johnnytam.idouban.adapter;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.shrimpcolo.johnnytam.idouban.common.BaseViewHolder.Builder;
+import com.shrimpcolo.johnnytam.idouban.adapter.BaseViewHolder.Builder;
 
 import java.util.List;
 
