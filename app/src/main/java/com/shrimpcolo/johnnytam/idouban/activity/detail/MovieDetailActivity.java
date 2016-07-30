@@ -6,18 +6,15 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.adapter.BasePagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.entity.Movies;
 import com.shrimpcolo.johnnytam.idouban.fragment.MovieDetailFragment;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -120,10 +117,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         return movieBuilder.toString();
     }
 
-    static class MoviePagerAdapter extends FragmentPagerAdapter {
-
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFrgmentTitles = new ArrayList<>();
+    static class MoviePagerAdapter extends BasePagerAdapter {
 
         public MoviePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -132,21 +126,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         public void addFragment(Fragment fragment, String title) {
             mFragments.add(fragment);
             mFrgmentTitles.add(title);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFrgmentTitles.get(position);
         }
     }
 }

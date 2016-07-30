@@ -5,18 +5,15 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
-import com.shrimpcolo.johnnytam.idouban.fragment.BookDetailFragment;
+import com.shrimpcolo.johnnytam.idouban.adapter.BasePagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.entity.Book;
+import com.shrimpcolo.johnnytam.idouban.fragment.BookDetailFragment;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BookDetailActivity extends AppCompatActivity {
     private Book book;
@@ -59,10 +56,7 @@ public class BookDetailActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
-    static class BookPagerAdapter extends FragmentPagerAdapter {
-
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFrgmentTitles = new ArrayList<>();
+    static class BookPagerAdapter extends BasePagerAdapter {
 
         public BookPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -71,21 +65,6 @@ public class BookDetailActivity extends AppCompatActivity {
         public void addFragment(Fragment fragment, String title) {
             mFragments.add(fragment);
             mFrgmentTitles.add(title);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFrgmentTitles.get(position);
         }
     }
 
