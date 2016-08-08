@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,10 +16,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.adapter.BasePagerAdapter;
+import com.shrimpcolo.johnnytam.idouban.fragment.AboutMeFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.BooksFragment;
+import com.shrimpcolo.johnnytam.idouban.fragment.JianshuFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.MoviesFragment;
 
 public class HomeActivity extends BaseActivity {
@@ -29,6 +33,9 @@ public class HomeActivity extends BaseActivity {
     private ViewPager mViewPager;
     private static final int TAB_MOVIES = 0;
     private static final int TAB_BOOK = 1;
+
+    TabLayout tabLayout;
+    private LinearLayout mLinearLayout;
 
     @Override
     protected void initVariables() {
@@ -65,18 +72,33 @@ public class HomeActivity extends BaseActivity {
         mViewPager = (ViewPager) findViewById(R.id.douban_view_pager);
         setupViewPager(mViewPager);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.douban_sliding_tabs);
+        tabLayout = (TabLayout) findViewById(R.id.douban_sliding_tabs);
         if (tabLayout != null) {
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.setupWithViewPager(mViewPager);
         }
+
+        //init tab_container LinearLayout
+        mLinearLayout = (LinearLayout)findViewById(R.id.tab_container);
+
+        initOthersFragment();
+    }
+    private void initOthersFragment() {
+        //init blog fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        JianshuFragment jianshuFragment = new JianshuFragment();
+        AboutMeFragment aboutFragment = new AboutMeFragment();
+
+        transaction.add(R.id.frame_container, jianshuFragment, "JIANSHU");
+        transaction.add(R.id.frame_container, aboutFragment, "ABOUTME");
+        transaction.commit();
     }
 
-    private void setUpUserProfile(){
+    private void setUpUserProfile() {
         View headView = mNavigationView.inflateHeaderView(R.layout.navigation_header);
         View profileView = headView.findViewById(R.id.profile_image);
-        if(profileView != null) {
+        if (profileView != null) {
             profileView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -87,10 +109,37 @@ public class HomeActivity extends BaseActivity {
             });
         }
     }
+
     private void setupDrawerNavigation(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
+                FragmentTransaction transacation = getSupportFragmentManager().beginTransaction();
+                Log.e(TAG, "===> getFragments.size = " + getSupportFragmentManager().getFragments().size());
+
+                //for show or hide fragment
+                switch (item.getItemId()) {
+                    case R.id.navigation_item_movies:
+                    case R.id.navigation_item_book:
+                        if(mLinearLayout.getVisibility() == View.GONE) {
+                            mLinearLayout.setVisibility(View.VISIBLE);
+                        }
+                        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                            if(fragment.getTag().equals("JIANSHU") || fragment.getTag().equals("ABOUTME") ) {
+                                transacation.hide(fragment);
+                            }else {
+                                transacation.show(fragment);
+                            }
+                        }
+                        break;
+                    case R.id.navigation_item_blog:
+                    case R.id.navigation_item_about:
+                        if(mLinearLayout.getVisibility() == View.VISIBLE) {
+                            mLinearLayout.setVisibility(View.GONE);
+                        }
+                        break;
+                }
+
                 switch (item.getItemId()) {
                     case R.id.navigation_item_movies:
                         mViewPager.setCurrentItem(TAB_MOVIES);
@@ -99,12 +148,26 @@ public class HomeActivity extends BaseActivity {
                         mViewPager.setCurrentItem(TAB_BOOK);
                         break;
                     case R.id.navigation_item_about:
-                        Log.e(TAG, "===> ITEM ABOUT");
+                        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                            if(fragment.getTag().equals("ABOUTME") ) {
+                                transacation.show(fragment);
+                            }else {
+                                transacation.hide(fragment);
+                            }
+                        }
                         break;
+
                     case R.id.navigation_item_blog:
-                        Log.e(TAG, "===> ITEM BLOG");
+                        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                            if(fragment.getTag().equals("JIANSHU")) {
+                                transacation.show(fragment);
+                            }else {
+                                transacation.hide(fragment);
+                            }
+                        }
                         break;
                 }
+                transacation.commit();
                 item.setChecked(true);
                 mDrawerLayout.closeDrawers();
                 return true;

@@ -7,19 +7,32 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activity.home.HomeActivity"
-    tools:showIn="@layout/content_home">
+    tools:showIn="@layout/activity_home">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/douban_sliding_tabs"
+    <LinearLayout
+        android:id="@+id/tab_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabMode="fixed" />
-    <!-- android:background="#1fbcd2"
-        app:tabIndicatorColor="#ff0000"-->
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/douban_view_pager"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/douban_sliding_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="fixed" />
+        <!-- android:background="#1fbcd2"
+            app:tabIndicatorColor="#ff0000"-->
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/douban_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scrollbars="none" />
 
 </LinearLayout>
