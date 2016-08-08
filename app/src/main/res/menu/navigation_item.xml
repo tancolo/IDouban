@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.home.HomeActivity">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_item_movies"
+            android:icon="@mipmap/ic_movie"
+            android:title="@string/navigation_movies" />
+        <item
+            android:id="@+id/navigation_item_book"
+            android:icon="@mipmap/ic_book"
+            android:title="@string/navigation_book" />
+        <item
+            android:id="@+id/navigation_item_blog"
+            android:icon="@mipmap/ic_blog"
+            android:title="@string/navigation_jianshu" />
+
+        <item
+            android:id="@+id/navigation_item_about"
+            android:icon="@mipmap/ic_aboutme"
+            android:title="@string/navigation_about" />
+    </group>
+</menu>

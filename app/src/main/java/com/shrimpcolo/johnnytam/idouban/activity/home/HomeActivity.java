@@ -2,12 +2,16 @@ package com.shrimpcolo.johnnytam.idouban.activity.home;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +23,12 @@ import com.shrimpcolo.johnnytam.idouban.fragment.MoviesFragment;
 
 public class HomeActivity extends BaseActivity {
     public static final String TAG = "COLO";
-//    private ViewPager mViewPager;
+
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
 
     @Override
     protected void initVariables() {
-
     }
 
     @Override
@@ -42,7 +47,18 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        //初始化控件
+        //init DrawerLayout
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerToggle.syncState();
+        mDrawerLayout.addDrawerListener(drawerToggle);
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
+        setupDrawerNavigation(mNavigationView);
+
+        //set profile Image
+        setUpUserProfile();
+
+        //初始化控件Home界面
         ViewPager viewPager = (ViewPager) findViewById(R.id.douban_view_pager);
         setupViewPager(viewPager);
 
@@ -52,6 +68,45 @@ public class HomeActivity extends BaseActivity {
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.setupWithViewPager(viewPager);
         }
+    }
+
+    private void setUpUserProfile(){
+        View headView = mNavigationView.inflateHeaderView(R.layout.navigation_header);
+        View profileView = headView.findViewById(R.id.profile_image);
+        if(profileView != null) {
+            profileView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e(TAG, "===> onClick...!");
+                    mDrawerLayout.closeDrawers();
+                    mNavigationView.getMenu().getItem(0).setChecked(true);
+                }
+            });
+        }
+    }
+    private void setupDrawerNavigation(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_item_movies:
+                        Log.e(TAG, "===> ITEM BOOK");
+                        break;
+                    case R.id.navigation_item_book:
+                        Log.e(TAG, "===> ITEM EXAMPLE");
+                        break;
+                    case R.id.navigation_item_about:
+                        Log.e(TAG, "===> ITEM ABOUT");
+                        break;
+                    case R.id.navigation_item_blog:
+                        Log.e(TAG, "===> ITEM BLOG");
+                        break;
+                }
+                item.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                return true;
+            }
+        });
     }
 
     private void setupViewPager(ViewPager viewPager) {

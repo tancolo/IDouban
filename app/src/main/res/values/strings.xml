@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">IDouban</string>
     <string name="action_settings">Settings</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+    <string name="navigation_movies">电影</string>
+    <string name="navigation_book">读书</string>
+    <string name="navigation_jianshu">简书</string>
+    <string name="navigation_about">关于</string>
 
     <string name="tab_movies_fragment">电影</string>
     <string name="tab_books_fragment">读书</string>
