@@ -26,6 +26,9 @@ public class HomeActivity extends BaseActivity {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+    private ViewPager mViewPager;
+    private static final int TAB_MOVIES = 0;
+    private static final int TAB_BOOK = 1;
 
     @Override
     protected void initVariables() {
@@ -59,14 +62,14 @@ public class HomeActivity extends BaseActivity {
         setUpUserProfile();
 
         //初始化控件Home界面
-        ViewPager viewPager = (ViewPager) findViewById(R.id.douban_view_pager);
-        setupViewPager(viewPager);
+        mViewPager = (ViewPager) findViewById(R.id.douban_view_pager);
+        setupViewPager(mViewPager);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.douban_sliding_tabs);
         if (tabLayout != null) {
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.addTab(tabLayout.newTab());
-            tabLayout.setupWithViewPager(viewPager);
+            tabLayout.setupWithViewPager(mViewPager);
         }
     }
 
@@ -90,10 +93,10 @@ public class HomeActivity extends BaseActivity {
             public boolean onNavigationItemSelected(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_item_movies:
-                        Log.e(TAG, "===> ITEM BOOK");
+                        mViewPager.setCurrentItem(TAB_MOVIES);
                         break;
                     case R.id.navigation_item_book:
-                        Log.e(TAG, "===> ITEM EXAMPLE");
+                        mViewPager.setCurrentItem(TAB_BOOK);
                         break;
                     case R.id.navigation_item_about:
                         Log.e(TAG, "===> ITEM ABOUT");
