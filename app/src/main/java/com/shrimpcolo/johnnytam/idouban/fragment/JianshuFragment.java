@@ -2,6 +2,7 @@ package com.shrimpcolo.johnnytam.idouban.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.activity.detail.WebViewActivity;
 import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.ui.DividerItemDecoration;
 
@@ -129,6 +131,7 @@ public class JianshuFragment extends Fragment {
     static class BlogViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private TextView mBlogTitle;
+        private HashMap<String, String> blogMap;
 
         public BlogViewHolder(View itemView) {
             super(itemView);
@@ -138,13 +141,20 @@ public class JianshuFragment extends Fragment {
 
         public void updateBlog(HashMap<String, String> blog) {
             mBlogTitle.setText(blog.get("title"));
+            blogMap = blog;
         }
 
         @Override
         public void onClick(View v) {
+            if(blogMap == null || itemView == null) return;
 
+            Context context = itemView.getContext();
+            if(context == null) return;
+
+            Intent intent = new Intent(context, WebViewActivity.class);
+            intent.putExtra("website", blogMap.get("url"));
+            context.startActivity(intent);
         }
     }
-
 
 }
