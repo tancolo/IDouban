@@ -27,6 +27,8 @@ import com.shrimpcolo.johnnytam.idouban.fragment.MoviesFragment;
 
 public class HomeActivity extends BaseActivity {
     public static final String TAG = "COLO";
+    private static final String MENU_BLOG = "JIANSHU";
+    private static final String MENU_ABOUT = "ABOUTME";
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -34,7 +36,6 @@ public class HomeActivity extends BaseActivity {
     private static final int TAB_MOVIES = 0;
     private static final int TAB_BOOK = 1;
 
-    TabLayout tabLayout;
     private LinearLayout mLinearLayout;
 
     @Override
@@ -72,7 +73,7 @@ public class HomeActivity extends BaseActivity {
         mViewPager = (ViewPager) findViewById(R.id.douban_view_pager);
         setupViewPager(mViewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.douban_sliding_tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.douban_sliding_tabs);
         if (tabLayout != null) {
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.addTab(tabLayout.newTab());
@@ -90,8 +91,8 @@ public class HomeActivity extends BaseActivity {
         JianshuFragment jianshuFragment = new JianshuFragment();
         AboutMeFragment aboutFragment = new AboutMeFragment();
 
-        transaction.add(R.id.frame_container, jianshuFragment, "JIANSHU");
-        transaction.add(R.id.frame_container, aboutFragment, "ABOUTME");
+        transaction.add(R.id.frame_container, jianshuFragment, MENU_BLOG);
+        transaction.add(R.id.frame_container, aboutFragment, MENU_ABOUT);
         transaction.commit();
     }
 
@@ -125,7 +126,7 @@ public class HomeActivity extends BaseActivity {
                             mLinearLayout.setVisibility(View.VISIBLE);
                         }
                         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                            if(fragment.getTag().equals("JIANSHU") || fragment.getTag().equals("ABOUTME") ) {
+                            if(fragment.getTag().equals(MENU_BLOG) || fragment.getTag().equals(MENU_ABOUT) ) {
                                 transacation.hide(fragment);
                             }else {
                                 transacation.show(fragment);
@@ -148,18 +149,12 @@ public class HomeActivity extends BaseActivity {
                         mViewPager.setCurrentItem(TAB_BOOK);
                         break;
                     case R.id.navigation_item_about:
-                        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                            if(fragment.getTag().equals("ABOUTME") ) {
-                                transacation.show(fragment);
-                            }else {
-                                transacation.hide(fragment);
-                            }
-                        }
-                        break;
-
                     case R.id.navigation_item_blog:
+                        String frgTag;
                         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                            if(fragment.getTag().equals("JIANSHU")) {
+                            frgTag = fragment.getTag();
+                            if((item.getItemId() == R.id.navigation_item_blog && frgTag.equals(MENU_BLOG))
+                                    || (item.getItemId() == R.id.navigation_item_about && frgTag.equals(MENU_ABOUT))) {
                                 transacation.show(fragment);
                             }else {
                                 transacation.hide(fragment);
