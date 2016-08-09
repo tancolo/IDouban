@@ -44,8 +44,7 @@
     <string name="book_author_desc">作者简介</string>
     <string name="book_Catalog">目录</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="aboutme">App Demo参看github： \nhttps://github.com/tancolo/IDouban \n\n简书博客：\nhttp://www.jianshu.com/users/d614825bc8a1/latest_articles</string>
+    <string name="author_name">檀木丁</string>
 
 </resources>
