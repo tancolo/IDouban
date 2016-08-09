@@ -28,9 +28,12 @@ IDouban中的代码在我的[简书](http://www.jianshu.com/p/98399b00ae78)上�
 
 如有想跟随编写足迹来阅读文章的同学可以`git clone`后再`git reset`到特定`commit`。 同时也提供 `git tag`方式获取代码。
 
-到07.29为止，发布了3个release
+## 到07.29为止，发布了3个release
 - release_01 ，实现电影&数据展示功能
 - release_02 ，重构RecyclerView相关的Adapter， 抽象成Adapter
 - release_03， 重构RecyclerView相关的ViewHolder， 抽象成BaseViewHolder， BaseAdapter
+
+## 08.09
+- release_04, 使用DrawerLayout等实现导航菜单功能
 
 欢迎在issue or 简书上留言， 觉得好，点个赞，加颗星！
