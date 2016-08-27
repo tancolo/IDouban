@@ -25,11 +25,15 @@ import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.activity.loginShare.LoginActivity;
 import com.shrimpcolo.johnnytam.idouban.adapter.BasePagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.entity.QQEntity;
+import com.shrimpcolo.johnnytam.idouban.entity.UserInfo;
 import com.shrimpcolo.johnnytam.idouban.fragment.AboutMeFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.BooksFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.JianshuFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.MoviesFragment;
 import com.squareup.picasso.Picasso;
+
+import java.io.Serializable;
+import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -53,11 +57,10 @@ public class HomeActivity extends BaseActivity {
     private ImageView profileView;
     private TextView profileName;
 
-    QQEntity qqEntity = null;
     private ISetupProfile iSetupProfile;
 
-    public interface ISetupProfile{
-        void setupProfile(QQEntity qqEntity);
+    public interface ISetupProfile {
+        void setupProfile(UserInfo userInfo);
     }
 
     @Override
@@ -268,16 +271,16 @@ public class HomeActivity extends BaseActivity {
 
         if (requestCode == LOGIN_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                qqEntity = (QQEntity)data.getSerializableExtra("qqentity");
-                String url = qqEntity.getFigureurl_qq_2();
-                String name = qqEntity.getNickname();
-                Log.e(TAG, "url: " + url + ",  name: " + name );
 
-                Picasso.with(this).load(url).into(profileView);
-                profileName.setText(name);
+                UserInfo userInfo = (UserInfo) data.getSerializableExtra("userInfo");
+
+                Log.e(TAG, "url: " + userInfo.getUserIcon() + ",  name: " + userInfo.getUserName());
+
+                Picasso.with(this).load(userInfo.getUserIcon()).into(profileView);
+                profileName.setText(userInfo.getUserName());
 
                 //callback for about me
-                iSetupProfile.setupProfile(qqEntity);
+                iSetupProfile.setupProfile(userInfo);
 
             }
         }

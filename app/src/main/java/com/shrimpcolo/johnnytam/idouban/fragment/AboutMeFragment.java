@@ -14,47 +14,18 @@ import android.widget.TextView;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.entity.QQEntity;
+import com.shrimpcolo.johnnytam.idouban.entity.UserInfo;
 import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AboutMeFragment extends Fragment implements HomeActivity.ISetupProfile{
-    private QQEntity qqEntity = null;
     private ImageView profileImage;
     private TextView profileName;
 
     public AboutMeFragment() {
         // Required empty public constructor
-    }
-
-//    public AboutMeFragment(QQEntity qqEntity) {
-//        this.qqEntity = qqEntity;
-//    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Log.e(HomeActivity.TAG, "1 onAttach!!!");
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.e(HomeActivity.TAG, "1 onCreate!!!");
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.e(HomeActivity.TAG, "1 onStart!!!");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.e(HomeActivity.TAG, "1 onResume!!!");
     }
 
     @Override
@@ -72,15 +43,14 @@ public class AboutMeFragment extends Fragment implements HomeActivity.ISetupProf
 
         profileImage = (ImageView)getActivity().findViewById(R.id.img_profile);
         profileName = (TextView)getActivity().findViewById(R.id.txt_author);
-
     }
 
     @Override
-    public void setupProfile(QQEntity qqEntity) {
+    public void setupProfile(UserInfo userInfo) {
         Log.e(HomeActivity.TAG, "1 setupProfile!!!");
-        if(qqEntity != null) {
-            Picasso.with(getActivity()).load(qqEntity.getFigureurl_qq_2()).into(profileImage);
-            profileName.setText(qqEntity.getNickname());
+        if(userInfo != null) {
+            Picasso.with(getActivity()).load(userInfo.getUserIcon()).into(profileImage);
+            profileName.setText(userInfo.getUserName());
         }
     }
 }

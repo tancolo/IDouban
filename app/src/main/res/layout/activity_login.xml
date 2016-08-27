@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -12,25 +12,44 @@
     tools:context="com.shrimpcolo.johnnytam.idouban.activity.loginShare.LoginActivity">
 
 
-    <ImageView
-        android:id="@+id/login_weibo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_weight="1"
-        android:src="@drawable/ssdk_oks_classic_sinaweibo" />
+    <!--<ImageView-->
+    <!--android:id="@+id/login_weibo"-->
+    <!--android:layout_width="100dp"-->
+    <!--android:layout_height="100dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:src="@drawable/ssdk_oks_classic_sinaweibo" />-->
 
-    <ImageView
-        android:id="@+id/login_weichat"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_weight="1"
-        android:src="@drawable/ssdk_oks_classic_wechat" />
+    <!--<ImageView-->
+    <!--android:id="@+id/login_weichat"-->
+    <!--android:layout_width="100dp"-->
+    <!--android:layout_height="100dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:src="@drawable/ssdk_oks_classic_wechat" />-->
 
-    <ImageView
-        android:id="@+id/login_qq"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_weight="1"
-        android:src="@drawable/ssdk_oks_classic_qq" />
+    <!--<ImageView-->
+    <!--android:id="@+id/login_qq"-->
+    <!--android:layout_width="100dp"-->
+    <!--android:layout_height="100dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:src="@drawable/ssdk_oks_classic_qq" />-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="无自有账户系统，使用第三方登录"
+            android:textSize="25sp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_tplogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="第三方登录"
+        android:textSize="20sp" />
 
 </LinearLayout>

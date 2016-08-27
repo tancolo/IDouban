@@ -47,4 +47,13 @@
     <string name="aboutme">App Demo参看github： \nhttps://github.com/tancolo/IDouban \n\n简书博客：\nhttp://www.jianshu.com/users/d614825bc8a1/latest_articles</string>
     <string name="author_name">檀木丁</string>
 
+    <string name="share_sdk">IDouban</string>
+    <string name="login_with_weixin">微信登录</string>
+    <string name="login_with_sina_weibo">微博登录</string>
+    <string name="login_with_qzone">QQ登录</string>
+
+    <string name="auth_cancel">授权操作已取消</string>
+    <string name="auth_error">授权操作遇到错误，请阅读Logcat输出; \n 如微信登录，需要微信客户端</string>
+    <string name="auth_complete">授权成功，正在跳转登录操作…</string>
+
 </resources>
