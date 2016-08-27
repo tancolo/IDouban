@@ -27,7 +27,16 @@ import com.shrimpcolo.johnnytam.idouban.fragment.BooksFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.JianshuFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.MoviesFragment;
 
-public class HomeActivity extends BaseActivity {
+import java.util.HashMap;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
+
+public class HomeActivity extends BaseActivity implements PlatformActionListener {
     public static final String TAG = "COLO";
     private static final String MENU_BLOG = "JIANSHU";
     private static final String MENU_ABOUT = "ABOUTME";
@@ -83,10 +92,11 @@ public class HomeActivity extends BaseActivity {
         }
 
         //init tab_container LinearLayout
-        mLinearLayout = (LinearLayout)findViewById(R.id.tab_container);
+        mLinearLayout = (LinearLayout) findViewById(R.id.tab_container);
 
         initOthersFragment();
     }
+
     private void initOthersFragment() {
         //init blog fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -124,20 +134,20 @@ public class HomeActivity extends BaseActivity {
                 switch (item.getItemId()) {
                     case R.id.navigation_item_movies:
                     case R.id.navigation_item_book:
-                        if(mLinearLayout.getVisibility() == View.GONE) {
+                        if (mLinearLayout.getVisibility() == View.GONE) {
                             mLinearLayout.setVisibility(View.VISIBLE);
                         }
                         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                            if(fragment.getTag().equals(MENU_BLOG) || fragment.getTag().equals(MENU_ABOUT) ) {
+                            if (fragment.getTag().equals(MENU_BLOG) || fragment.getTag().equals(MENU_ABOUT)) {
                                 transacation.hide(fragment);
-                            }else {
+                            } else {
                                 transacation.show(fragment);
                             }
                         }
                         break;
                     case R.id.navigation_item_blog:
                     case R.id.navigation_item_about:
-                        if(mLinearLayout.getVisibility() == View.VISIBLE) {
+                        if (mLinearLayout.getVisibility() == View.VISIBLE) {
                             mLinearLayout.setVisibility(View.GONE);
                         }
                         break;
@@ -155,10 +165,10 @@ public class HomeActivity extends BaseActivity {
                         String frgTag;
                         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
                             frgTag = fragment.getTag();
-                            if((item.getItemId() == R.id.navigation_item_blog && frgTag.equals(MENU_BLOG))
+                            if ((item.getItemId() == R.id.navigation_item_blog && frgTag.equals(MENU_BLOG))
                                     || (item.getItemId() == R.id.navigation_item_about && frgTag.equals(MENU_ABOUT))) {
                                 transacation.show(fragment);
-                            }else {
+                            } else {
                                 transacation.hide(fragment);
                             }
                         }
@@ -167,6 +177,25 @@ public class HomeActivity extends BaseActivity {
                     case R.id.navigation_item_login:
                         Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
                         startActivity(intent);
+                        break;
+
+                    case R.id.navigation_item_logout:
+                        ShareSDK.initSDK(HomeActivity.this);
+                        Platform qq = ShareSDK.getPlatform(HomeActivity.this, QQ.NAME);
+                        Platform weibo = ShareSDK.getPlatform(HomeActivity.this, SinaWeibo.NAME);
+                        Platform wechat = ShareSDK.getPlatform(HomeActivity.this, Wechat.NAME);
+
+                        if (qq.isValid()) {
+                            Log.e(TAG, "remove QQ account!");
+                            qq.removeAccount(true);
+                        }else if (weibo.isValid()) {
+                            Log.e(TAG, "remove weibo account!");
+                            weibo.removeAccount(true);
+                        }else if (wechat.isValid()) {
+                            Log.e(TAG, "remove wechat account!");
+                            wechat.removeAccount(true);
+                        }else {
+                        }
                         break;
                 }
                 transacation.commit();
@@ -182,6 +211,21 @@ public class HomeActivity extends BaseActivity {
         pagerAdapter.addFragment(new MoviesFragment(), getApplicationContext().getResources().getString(R.string.tab_movies_fragment));
         pagerAdapter.addFragment(new BooksFragment(), getApplicationContext().getResources().getString(R.string.tab_books_fragment));
         viewPager.setAdapter(pagerAdapter);
+    }
+
+    @Override
+    public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+
+    }
+
+    @Override
+    public void onError(Platform platform, int i, Throwable throwable) {
+
+    }
+
+    @Override
+    public void onCancel(Platform platform, int i) {
+
     }
 
     static class DoubanPagerAdapter extends BasePagerAdapter {

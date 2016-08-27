@@ -53,10 +53,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             case R.id.login_qq:
                 Log.e(HomeActivity.TAG, "LoginActivity---> login qq");
                 Platform qq = ShareSDK.getPlatform(QQ.NAME);
-                qq.SSOSetting(true);
-                qq.setPlatformActionListener(this);
-                //关闭SSO授权
                 qq.SSOSetting(false);
+                qq.setPlatformActionListener(this);
                 qq.showUser(null);
                 break;
             default:
