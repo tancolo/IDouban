@@ -1,50 +1,50 @@
 <resources>
-    <string name="app_name" >IDouban</string>
-    <string name="action_settings" >Settings</string>
-    <string name="drawer_open" >Open</string>
-    <string name="drawer_close" >Close</string>
+    <string name="app_name">IDouban</string>
+    <string name="action_settings">Settings</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 
-    <string name="navigation_movies" >电影</string>
-    <string name="navigation_book" >读书</string>
-    <string name="navigation_jianshu" >简书</string>
-    <string name="navigation_about" >关于</string>
+    <string name="navigation_movies">电影</string>
+    <string name="navigation_book">读书</string>
+    <string name="navigation_jianshu">简书</string>
+    <string name="navigation_about">关于</string>
 
-    <string name="tab_movies_fragment" >电影</string>
-    <string name="tab_books_fragment" >读书</string>
+    <string name="tab_movies_fragment">电影</string>
+    <string name="tab_books_fragment">读书</string>
 
-    <string name="hello_movies_fragment" >电影 Fragment</string>
-    <string name="hello_books_fragment" >读书 Fragment</string>
+    <string name="hello_movies_fragment">电影 Fragment</string>
+    <string name="hello_books_fragment">读书 Fragment</string>
 
-    <string name="hot_movies"  >影院热映</string>
-    <string name="coming_movies" >院线即将上映</string>
-    <string name="string_no_note" >暂无评分</string>
-    <string name="title_activity_movie_detail" >MovieDetailActivity</string>
+    <string name="hot_movies">影院热映</string>
+    <string name="coming_movies">院线即将上映</string>
+    <string name="string_no_note">暂无评分</string>
+    <string name="title_activity_movie_detail">MovieDetailActivity</string>
 
-    <string name="movie_info" >影片信息</string>
-    <string name="movie_description" >简介</string>
-    <string name="movie_directors" >导演：</string>
-    <string name="movie_casts" >主演：</string>
-    <string name="movie_aka" >又名：</string>
-    <string name="movie_year" >上映：</string>
-    <string name="movie_genres" >类型：</string>
-    <string name="movie_during" >片长：</string>
-    <string name="movie_countries" >地区：</string>
-    <string name="movie_languages" >语言：</string>
-    <string name="movie_imdb" >IMDb：</string>
-    <string name="movie_not_find" >无法获取</string>
+    <string name="movie_info">影片信息</string>
+    <string name="movie_description">简介</string>
+    <string name="movie_directors">导演：</string>
+    <string name="movie_casts">主演：</string>
+    <string name="movie_aka">又名：</string>
+    <string name="movie_year">上映：</string>
+    <string name="movie_genres">类型：</string>
+    <string name="movie_during">片长：</string>
+    <string name="movie_countries">地区：</string>
+    <string name="movie_languages">语言：</string>
+    <string name="movie_imdb">IMDb：</string>
+    <string name="movie_not_find">无法获取</string>
 
 
-    <string name="prefix_subtitle" >副标题: %1$s</string>
-    <string name="prefix_author" >作者: %1$s</string>
-    <string name="prefix_pubdata" >出版日期: %1$s</string>
-    <string name="prefix_pages" >页数: %1$s</string>
-    <string name="prefix_price" >定价: %1$s</string>
+    <string name="prefix_subtitle">副标题: %1$s</string>
+    <string name="prefix_author">作者: %1$s</string>
+    <string name="prefix_pubdata">出版日期: %1$s</string>
+    <string name="prefix_pages">页数: %1$s</string>
+    <string name="prefix_price">定价: %1$s</string>
 
-    <string name="book_content_desc" >内容简介</string>
-    <string name="book_author_desc" >作者简介</string>
-    <string name="book_Catalog" >目录</string>
+    <string name="book_content_desc">内容简介</string>
+    <string name="book_author_desc">作者简介</string>
+    <string name="book_Catalog">目录</string>
 
-    <string name="aboutme" >App Demo参看github： \nhttps://github.com/tancolo/IDouban \n\n简书博客：\nhttp://www.jianshu.com/users/d614825bc8a1/latest_articles</string>
-    <string name="author_name" >檀木丁</string>
+    <string name="aboutme">App Demo参看github： \nhttps://github.com/tancolo/IDouban \n\n简书博客：\nhttp://www.jianshu.com/users/d614825bc8a1/latest_articles</string>
+    <string name="author_name">檀木丁</string>
 
 </resources>

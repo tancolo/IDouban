@@ -1,5 +1,6 @@
 package com.shrimpcolo.johnnytam.idouban.activity.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.activity.loginShare.LoginActivity;
 import com.shrimpcolo.johnnytam.idouban.adapter.BasePagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.fragment.AboutMeFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.BooksFragment;
@@ -160,6 +162,11 @@ public class HomeActivity extends BaseActivity {
                                 transacation.hide(fragment);
                             }
                         }
+                        break;
+
+                    case R.id.navigation_item_login:
+                        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                        startActivity(intent);
                         break;
                 }
                 transacation.commit();
