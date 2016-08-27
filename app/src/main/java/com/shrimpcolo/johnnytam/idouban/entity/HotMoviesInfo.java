@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Johnny Tam on 2016/7/18.
  */
-public class HotMoviesInfo {
+    public class HotMoviesInfo {
 
     /**
      * count : 20

@@ -17,29 +17,31 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.activity.loginShare.LoginActivity;
 import com.shrimpcolo.johnnytam.idouban.adapter.BasePagerAdapter;
+import com.shrimpcolo.johnnytam.idouban.entity.QQEntity;
 import com.shrimpcolo.johnnytam.idouban.fragment.AboutMeFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.BooksFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.JianshuFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.MoviesFragment;
-
-import java.util.HashMap;
+import com.squareup.picasso.Picasso;
 
 import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.wechat.friends.Wechat;
 
-public class HomeActivity extends BaseActivity implements PlatformActionListener {
+public class HomeActivity extends BaseActivity {
     public static final String TAG = "COLO";
     private static final String MENU_BLOG = "JIANSHU";
     private static final String MENU_ABOUT = "ABOUTME";
+    private static final int LOGIN_REQUEST_CODE = 1000;
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -48,6 +50,15 @@ public class HomeActivity extends BaseActivity implements PlatformActionListener
     private static final int TAB_BOOK = 1;
 
     private LinearLayout mLinearLayout;
+    private ImageView profileView;
+    private TextView profileName;
+
+    QQEntity qqEntity = null;
+    private ISetupProfile iSetupProfile;
+
+    public interface ISetupProfile{
+        void setupProfile(QQEntity qqEntity);
+    }
 
     @Override
     protected void initVariables() {
@@ -78,7 +89,7 @@ public class HomeActivity extends BaseActivity implements PlatformActionListener
         setupDrawerNavigation(mNavigationView);
 
         //set profile Image
-        setUpUserProfile();
+        setupUserProfile();
 
         //初始化控件Home界面
         mViewPager = (ViewPager) findViewById(R.id.douban_view_pager);
@@ -102,15 +113,18 @@ public class HomeActivity extends BaseActivity implements PlatformActionListener
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         JianshuFragment jianshuFragment = new JianshuFragment();
         AboutMeFragment aboutFragment = new AboutMeFragment();
+        iSetupProfile = aboutFragment;
 
         transaction.add(R.id.frame_container, jianshuFragment, MENU_BLOG);
         transaction.add(R.id.frame_container, aboutFragment, MENU_ABOUT);
         transaction.commit();
     }
 
-    private void setUpUserProfile() {
+    private void setupUserProfile() {
         View headView = mNavigationView.inflateHeaderView(R.layout.navigation_header);
-        View profileView = headView.findViewById(R.id.profile_image);
+        profileView = (ImageView) headView.findViewById(R.id.profile_image);
+        profileName = (TextView) headView.findViewById(R.id.profile_name);
+
         if (profileView != null) {
             profileView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -176,7 +190,8 @@ public class HomeActivity extends BaseActivity implements PlatformActionListener
 
                     case R.id.navigation_item_login:
                         Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-                        startActivity(intent);
+                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                        //startActivity(intent);
                         break;
 
                     case R.id.navigation_item_logout:
@@ -188,13 +203,13 @@ public class HomeActivity extends BaseActivity implements PlatformActionListener
                         if (qq.isValid()) {
                             Log.e(TAG, "remove QQ account!");
                             qq.removeAccount(true);
-                        }else if (weibo.isValid()) {
+                        } else if (weibo.isValid()) {
                             Log.e(TAG, "remove weibo account!");
                             weibo.removeAccount(true);
-                        }else if (wechat.isValid()) {
+                        } else if (wechat.isValid()) {
                             Log.e(TAG, "remove wechat account!");
                             wechat.removeAccount(true);
-                        }else {
+                        } else {
                         }
                         break;
                 }
@@ -211,21 +226,6 @@ public class HomeActivity extends BaseActivity implements PlatformActionListener
         pagerAdapter.addFragment(new MoviesFragment(), getApplicationContext().getResources().getString(R.string.tab_movies_fragment));
         pagerAdapter.addFragment(new BooksFragment(), getApplicationContext().getResources().getString(R.string.tab_books_fragment));
         viewPager.setAdapter(pagerAdapter);
-    }
-
-    @Override
-    public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-
-    }
-
-    @Override
-    public void onError(Platform platform, int i, Throwable throwable) {
-
-    }
-
-    @Override
-    public void onCancel(Platform platform, int i) {
-
     }
 
     static class DoubanPagerAdapter extends BasePagerAdapter {
@@ -260,5 +260,26 @@ public class HomeActivity extends BaseActivity implements PlatformActionListener
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LOGIN_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                qqEntity = (QQEntity)data.getSerializableExtra("qqentity");
+                String url = qqEntity.getFigureurl_qq_2();
+                String name = qqEntity.getNickname();
+                Log.e(TAG, "url: " + url + ",  name: " + name );
+
+                Picasso.with(this).load(url).into(profileView);
+                profileName.setText(name);
+
+                //callback for about me
+                iSetupProfile.setupProfile(qqEntity);
+
+            }
+        }
     }
 }
