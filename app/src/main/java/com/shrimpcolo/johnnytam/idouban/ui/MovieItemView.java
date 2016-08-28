@@ -3,6 +3,7 @@ package com.shrimpcolo.johnnytam.idouban.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -21,10 +22,14 @@ import com.shrimpcolo.johnnytam.idouban.activity.detail.MovieDetailActivity;
 import com.shrimpcolo.johnnytam.idouban.entity.Movies;
 import com.squareup.picasso.Picasso;
 
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
+
 /**
  * Created by Johnny Tam on 2016/7/28.
  */
-public class MovieItemView extends CardView implements View.OnClickListener, IModelView<Movies> {
+public class MovieItemView extends CardView implements View.OnClickListener, View.OnLongClickListener, IModelView<Movies> {
     private ImageView mMovieImage;
     private TextView mMovieTitle;
     private RatingBar mMovieStars;
@@ -54,6 +59,7 @@ public class MovieItemView extends CardView implements View.OnClickListener, IMo
         mMovieRatingAverage = (TextView) findViewById(R.id.movie_average);
 
         setOnClickListener(this);
+        setOnLongClickListener(this);
     }
 
     @Override
@@ -99,6 +105,72 @@ public class MovieItemView extends CardView implements View.OnClickListener, IMo
         }
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        Log.e(HomeActivity.TAG, "====> Movies: "
+                + mMovie.getImages().getLarge()
+                + ",  "
+                + mMovie.getTitle());
+
+        showShare();
+
+        return true;
+    }
+
+    private void showShare() {
+        ShareSDK.initSDK(getContext());
+        OnekeyShare oks = new OnekeyShare();
+
+        //close the sso authorize
+        oks.disableSSOWhenAuthorize();
+
+        oks.setTitle(mMovie.getTitle());
+        oks.setText(getMovieInfoForShare(mMovie));
+        oks.setComment("值得一看的电影");
+        oks.setImageUrl(mMovie.getImages().getLarge());
+        oks.setTitleUrl(mMovie.getAlt());
+
+        oks.show(getContext());
+    }
+
+    private String getMovieInfoForShare(Movies movie) {
+        //拼接影片信息, 导演， 主演，又名， 上映时间， 类型， 片长，地区， 语言，IMDB
+        StringBuilder movieBuilder = new StringBuilder();
+        Resources resources = getContext().getResources();
+
+        movieBuilder.append(resources.getString(R.string.movie_directors));
+        for (Movies.DirectorsBean director : movie.getDirectors()) {
+            movieBuilder.append(director.getName());
+            movieBuilder.append(" ");
+        }
+        movieBuilder.append("\n");
+
+        //主演
+        movieBuilder.append(resources.getString(R.string.movie_casts));
+        for (Movies.CastsBean cast : movie.getCasts()) {
+            movieBuilder.append(cast.getName());
+            movieBuilder.append(" ");
+        }
+        movieBuilder.append("\n");
+
+        //又名
+        movieBuilder.append(resources.getString(R.string.movie_aka));
+        movieBuilder.append(movie.getOriginal_title());
+        movieBuilder.append("\n");
+
+        movieBuilder.append(resources.getString(R.string.movie_year));
+        movieBuilder.append(movie.getYear());
+        movieBuilder.append("\n");
+
+        movieBuilder.append(resources.getString(R.string.movie_genres));
+        for (int index = 0; index < movie.getGenres().size(); index++) {
+            movieBuilder.append(movie.getGenres().get(index));
+            movieBuilder.append(" / ");
+        }
+        movieBuilder.append("\n");
+
+        return movieBuilder.toString();
+    }
 //    @Override
 //    public View getView() {
 //        return this;
