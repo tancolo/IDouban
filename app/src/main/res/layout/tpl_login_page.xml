@@ -30,18 +30,18 @@
                 android:singleLine="true"
                 android:textStyle="bold" />
 
-  			<TextView
-                android:id="@+id/tvWeixin"
-                android:singleLine="true"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="15dp"
-                android:background="@drawable/wechat_login"
-                android:gravity="center"
-                android:text="@string/login_with_weixin"
-                android:textColor="@color/white"
-                android:textSize="18dp" />
+  			<!--<TextView-->
+                <!--android:id="@+id/tvWeixin"-->
+                <!--android:singleLine="true"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_marginBottom="15dp"-->
+                <!--android:background="@drawable/wechat_login"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/login_with_weixin"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="18dp" />-->
   
             <TextView
                 android:id="@+id/tvWeibo"

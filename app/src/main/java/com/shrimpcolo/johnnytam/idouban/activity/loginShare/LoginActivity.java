@@ -40,6 +40,7 @@ public class LoginActivity extends BaseActivity {
                     Object key = entry.getKey();
                     Object value = entry.getValue();
                     //Log.e(HomeActivity.TAG, " " + key + "： " + value);
+
                     if (platform.equals(QQ.NAME)) {
                         if (key.equals("nickname")) {
                             userInfo.setUserName((String) value);
@@ -53,7 +54,17 @@ public class LoginActivity extends BaseActivity {
 
                         }
                     } else if (platform.equals(SinaWeibo.NAME)) {
-                    } else {//wechat
+                        if(key.equals("name")) {
+                            userInfo.setUserName((String) value);
+
+                        }else if(key.equals("avatar_hd")) {
+                            userInfo.setUserIcon((String) value);
+
+                        }else if(key.equals("gender")) {
+                            UserInfo.Gender gender = value.equals("m") ? UserInfo.Gender.MALE : UserInfo.Gender.FEMALE;
+                            userInfo.setUserGender(gender);
+                        }
+                    } else {//wechat 个人无法申请微信登录
                     }
                 }//end while
 

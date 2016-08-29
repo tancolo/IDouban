@@ -40,21 +40,21 @@ public class ThirdPartyLogin extends FakeActivity implements View.OnClickListene
         // 初始化ui
         handler = new Handler(this);
         activity.setContentView(R.layout.tpl_login_page);
-        (activity.findViewById(R.id.tvWeixin)).setOnClickListener(this);
+        //(activity.findViewById(R.id.tvWeixin)).setOnClickListener(this);
         (activity.findViewById(R.id.tvWeibo)).setOnClickListener(this);
         (activity.findViewById(R.id.tvQq)).setOnClickListener(this);
     }
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tvWeixin: {
-                //微信登录
-                //测试时，需要打包签名；sample测试时，用项目里面的demokey.keystore
-                //打包签名apk,然后才能产生微信的登录
-                Platform wechat = ShareSDK.getPlatform(Wechat.NAME);
-                authorize(wechat);
-            }
-            break;
+//            case R.id.tvWeixin: {
+//                //微信登录
+//                //测试时，需要打包签名；sample测试时，用项目里面的demokey.keystore
+//                //打包签名apk,然后才能产生微信的登录
+//                Platform wechat = ShareSDK.getPlatform(Wechat.NAME);
+//                authorize(wechat);
+//            }
+//            break;
             case R.id.tvWeibo: {
                 //新浪微博
                 Platform sina = ShareSDK.getPlatform(SinaWeibo.NAME);
