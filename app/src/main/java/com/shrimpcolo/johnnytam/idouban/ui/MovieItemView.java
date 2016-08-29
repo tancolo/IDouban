@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.entity.Book;
 import com.shrimpcolo.johnnytam.idouban.interfaces.IModelView;
 import com.shrimpcolo.johnnytam.idouban.activity.detail.MovieDetailActivity;
 import com.shrimpcolo.johnnytam.idouban.entity.Movies;
@@ -107,28 +108,31 @@ public class MovieItemView extends CardView implements View.OnClickListener, Vie
 
     @Override
     public boolean onLongClick(View v) {
-        Log.e(HomeActivity.TAG, "====> Movies: "
-                + mMovie.getImages().getLarge()
-                + ",  "
-                + mMovie.getTitle());
-
-        showShare();
-
+        showShare(false);
         return true;
     }
 
-    private void showShare() {
+    /**
+     *
+     * @param isSilent 是否直接分享， false： 不是；true: 是
+     */
+    private void showShare(Boolean isSilent) {
         ShareSDK.initSDK(getContext());
         OnekeyShare oks = new OnekeyShare();
 
-        //close the sso authorize
-        oks.disableSSOWhenAuthorize();
+//        Log.e(HomeActivity.TAG, "Title: " + mMovie.getTitle()
+//                + "\n Text: " + getMovieInfoForShare(mMovie));
+//        Log.e(HomeActivity.TAG, "Url: " + mMovie.getAlt());
+//        Log.e(HomeActivity.TAG, "ImageUrl: " + mMovie.getImages().getSmall());
 
         oks.setTitle(mMovie.getTitle());
         oks.setText(getMovieInfoForShare(mMovie));
-        oks.setComment("值得一看的电影");
-        oks.setImageUrl(mMovie.getImages().getLarge());
-        oks.setTitleUrl(mMovie.getAlt());
+        oks.setUrl(mMovie.getAlt());
+        oks.setImageUrl(mMovie.getImages().getSmall());
+
+        //close the sso authorize
+        oks.disableSSOWhenAuthorize();
+        oks.setSilent(isSilent);
 
         oks.show(getContext());
     }
