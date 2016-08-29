@@ -24,16 +24,12 @@ import android.widget.TextView;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.activity.loginShare.LoginActivity;
 import com.shrimpcolo.johnnytam.idouban.adapter.BasePagerAdapter;
-import com.shrimpcolo.johnnytam.idouban.entity.QQEntity;
 import com.shrimpcolo.johnnytam.idouban.entity.UserInfo;
 import com.shrimpcolo.johnnytam.idouban.fragment.AboutMeFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.BooksFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.JianshuFragment;
 import com.shrimpcolo.johnnytam.idouban.fragment.MoviesFragment;
 import com.squareup.picasso.Picasso;
-
-import java.io.Serializable;
-import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -285,4 +281,5 @@ public class HomeActivity extends BaseActivity {
             }
         }
     }
+
 }

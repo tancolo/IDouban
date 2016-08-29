@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
@@ -33,6 +34,7 @@ public class MoviesFragment extends BaseFragment<Movies> {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_hot_movies);
+        mProgressBar = (ProgressBar)view.findViewById(R.id.pgb_loading);
         return view;
     }
 
@@ -53,12 +55,31 @@ public class MoviesFragment extends BaseFragment<Movies> {
                 //debug
                 Log.e(HomeActivity.TAG, "===> Response, size = " + mDataList.size());
                 mAdapter.setData(mDataList);
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(mProgressBar != null) {
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
             }
 
             @Override
             public void onFailure(Call<HotMoviesInfo> call, Throwable t) {
                 Log.d(HomeActivity.TAG, "===> onFailure: Thread.Id = "
                         + Thread.currentThread().getId() + ", Error: " + t.getMessage());
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mProgressBar != null) {
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
             }
         });
     }
@@ -73,6 +94,9 @@ public class MoviesFragment extends BaseFragment<Movies> {
             mAdapter = new ModelAdapter<>(mDataList, R.layout.recyclerview_movies_item);
 
             mRecyclerView.setAdapter(mAdapter);
+        }
+        if(mProgressBar != null) {
+            mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
@@ -33,7 +34,8 @@ public class BooksFragment extends BaseFragment<Book> {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_books, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_books);
-        Log.e(HomeActivity.TAG, "===> mRecyclerView = " + mRecyclerView);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.pgb_loading_book);
+//        Log.e(HomeActivity.TAG, "===> mRecyclerView = " + mRecyclerView);
         return view;
     }
 
@@ -46,12 +48,36 @@ public class BooksFragment extends BaseFragment<Book> {
 
                 Log.e(HomeActivity.TAG, "===>Book Response, size = " + mDataList.size());
                 mAdapter.setData(mDataList);
+
+                //test
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mProgressBar != null) {
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
             }
 
             @Override
             public void onFailure(Call<BookInfo> call, Throwable t) {
                 Log.d(HomeActivity.TAG, "===>Book onFailure: Thread.Id = "
                         + Thread.currentThread().getId() + ", Error: " + t.getMessage());
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mProgressBar != null) {
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
             }
         });
     }
@@ -66,6 +92,9 @@ public class BooksFragment extends BaseFragment<Book> {
             mAdapter = new ModelAdapter<>(mDataList, R.layout.recyclerview_book_item);
 
             mRecyclerView.setAdapter(mAdapter);
+        }
+        if(mProgressBar != null) {
+            mProgressBar.setVisibility(View.VISIBLE);
         }
     }
 

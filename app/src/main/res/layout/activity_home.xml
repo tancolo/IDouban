@@ -46,4 +46,12 @@
         android:layout_gravity="start"
         app:menu="@menu/navigation_item" />
 
+    <!--<ProgressBar-->
+        <!--android:id="@+id/pgb_loading"-->
+        <!--style="@android:style/Widget.ProgressBar.Small"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:indeterminate="true" />-->
+
 </android.support.v4.widget.DrawerLayout>

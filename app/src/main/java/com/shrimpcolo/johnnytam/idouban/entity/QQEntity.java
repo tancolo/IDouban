@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by Johnny Tam on 2016/8/27.
+ * Not used
  */
 public class QQEntity implements Serializable{
     private static final long serialVersionUID = -4105891348205797257L;

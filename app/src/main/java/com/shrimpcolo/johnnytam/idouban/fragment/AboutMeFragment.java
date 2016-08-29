@@ -1,7 +1,6 @@
 package com.shrimpcolo.johnnytam.idouban.fragment;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
-import com.shrimpcolo.johnnytam.idouban.entity.QQEntity;
 import com.shrimpcolo.johnnytam.idouban.entity.UserInfo;
 import com.squareup.picasso.Picasso;
 

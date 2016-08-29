@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.adapter.BaseAdapter;
@@ -21,6 +22,8 @@ public abstract class BaseFragment<T> extends Fragment{
     protected List<T> mDataList = new ArrayList<>();
     protected RecyclerView mRecyclerView;
     protected BaseAdapter mAdapter;
+
+    protected ProgressBar mProgressBar;
 
     public BaseFragment() {
         // Required empty public constructor
