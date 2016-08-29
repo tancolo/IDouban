@@ -64,7 +64,7 @@
         SortId="1"
         AppKey="2161588120"
         AppSecret="ff021ba00a5d71ebde121e143b83ca23"
-        RedirectUrl="http://www.sharesdk.cn"
+        RedirectUrl="https://github.com/tancolo/IDouban"
         ShareByAppClient="true"
         Enable="true" />
     <!-- 

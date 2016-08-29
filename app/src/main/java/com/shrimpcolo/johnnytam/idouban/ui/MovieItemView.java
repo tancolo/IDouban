@@ -126,9 +126,10 @@ public class MovieItemView extends CardView implements View.OnClickListener, Vie
 //        Log.e(HomeActivity.TAG, "ImageUrl: " + mMovie.getImages().getSmall());
 
         oks.setTitle(mMovie.getTitle());
+        oks.setTitleUrl(mMovie.getAlt());//for QQ
         oks.setText(getMovieInfoForShare(mMovie));
         oks.setUrl(mMovie.getAlt());
-        oks.setImageUrl(mMovie.getImages().getSmall());
+        oks.setImageUrl(mMovie.getImages().getLarge());
 
         //close the sso authorize
         oks.disableSSOWhenAuthorize();

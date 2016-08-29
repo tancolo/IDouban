@@ -3,10 +3,12 @@ package com.shrimpcolo.johnnytam.idouban.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -17,13 +19,17 @@ import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.entity.Book;
 import com.shrimpcolo.johnnytam.idouban.activity.detail.BookDetailActivity;
+import com.shrimpcolo.johnnytam.idouban.entity.Movies;
 import com.shrimpcolo.johnnytam.idouban.interfaces.IModelView;
 import com.squareup.picasso.Picasso;
+
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 /**
  * Created by Johnny Tam on 2016/7/28.
  */
-public class BookItemView  extends CardView implements View.OnClickListener, IModelView<Book>{
+public class BookItemView extends CardView implements View.OnClickListener, View.OnLongClickListener, IModelView<Book> {
 
     private ImageView bookImage;
     private TextView bookTitle;
@@ -60,6 +66,7 @@ public class BookItemView  extends CardView implements View.OnClickListener, IMo
         bookPages = (TextView) findViewById(R.id.txt_pages);
 
         setOnClickListener(this);
+        setOnLongClickListener(this);
     }
 
     @Override
@@ -112,4 +119,55 @@ public class BookItemView  extends CardView implements View.OnClickListener, IMo
             ActivityCompat.startActivity(activity, intent, bundle);
         }
     }
+
+    @Override
+    public boolean onLongClick(View v) {
+        showShare(false);
+        return true;
+    }
+
+    /**
+     * @param isSilent 是否直接分享， false： 不是；true: 是
+     */
+    private void showShare(Boolean isSilent) {
+        ShareSDK.initSDK(getContext());
+        OnekeyShare oks = new OnekeyShare();
+
+        oks.setTitle(mBook.getTitle());
+        oks.setTitleUrl(mBook.getEbook_url());//for QQ
+        oks.setText(getBookInfoForShare(mBook));
+
+        String book_url = mBook.getEbook_url();
+        Log.e(HomeActivity.TAG, "bookUrl: " +  book_url);
+
+        if(book_url != null && !TextUtils.isEmpty(book_url)) {
+            oks.setUrl(book_url);
+        }
+        oks.setImageUrl(mBook.getImages().getLarge());
+
+        //close the sso authorize
+        oks.disableSSOWhenAuthorize();
+        oks.setSilent(isSilent);
+
+        oks.show(getContext());
+    }
+
+    private String getBookInfoForShare(Book book) {
+        //拼接书籍信息, 作者，副标题
+        StringBuilder builder = new StringBuilder();
+
+        //作者
+        for(String author : book.getAuthor()) {
+            builder.append(author);
+            builder.append("/");
+        }
+        builder.append("\n");
+
+        //副标题
+        builder.append(book.getSubtitle());
+        builder.append("\n");
+
+        return builder.toString();
+    }
+
 }
