@@ -48,13 +48,7 @@ public class BooksFragment extends BaseFragment<Book> {
 
                 Log.e(HomeActivity.TAG, "===>Book Response, size = " + mDataList.size());
                 mAdapter.setData(mDataList);
-
-                //test
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
