@@ -58,4 +58,7 @@
     <string name="auth_error">授权操作遇到错误，请阅读Logcat输出; \n 如微信登录，需要微信客户端</string>
     <string name="auth_complete">授权成功，正在跳转登录操作…</string>
 
+    <string name="msg_error">数据获取失败!</string>
+    <string name="serach_book">黑客与画家</string>
+
 </resources>

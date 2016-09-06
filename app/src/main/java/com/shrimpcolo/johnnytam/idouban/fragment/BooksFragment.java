@@ -18,10 +18,10 @@ import com.shrimpcolo.johnnytam.idouban.entity.Book;
 import com.shrimpcolo.johnnytam.idouban.entity.BookInfo;
 import com.shrimpcolo.johnnytam.idouban.net.DoubanManager;
 import com.shrimpcolo.johnnytam.idouban.net.IDoubanService;
+import com.shrimpcolo.johnnytam.idouban.utils.ToastUtil;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,33 +41,36 @@ public class BooksFragment extends BaseFragment<Book> {
 
     @Override
     public void loadData() {
-        loadBooks(new Callback<BookInfo>() {
-            @Override
-            public void onResponse(Call<BookInfo> call, Response<BookInfo> response) {
-                mDataList = response.body().getBooks();
+        IDoubanService movieService = DoubanManager.createDoubanService();
+        movieService.searchBooks(getString(R.string.serach_book))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<BookInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.e(HomeActivity.TAG, "===>Book onCompleted!!!");
 
-                Log.e(HomeActivity.TAG, "===>Book Response, size = " + mDataList.size());
-                mAdapter.setData(mDataList);
-                
-                getActivity().runOnUiThread(() -> {
-                    if (mProgressBar != null) {
-                        mProgressBar.setVisibility(View.GONE);
+                        if (mProgressBar != null) {
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(HomeActivity.TAG, "===>Book onFailure, Error: " + e.getMessage());
+                        ToastUtil.getInstance().showToast(getContext(), getResources().getString(R.string.msg_error));
+
+                        if (mProgressBar != null) {
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(BookInfo bookInfo) {
+                        mDataList = bookInfo.getBooks();
+                        Log.e(HomeActivity.TAG, "===>Book Response, size = " + mDataList.size());
+                        mAdapter.setData(mDataList);
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(Call<BookInfo> call, Throwable t) {
-                Log.d(HomeActivity.TAG, "===>Book onFailure: Thread.Id = "
-                        + Thread.currentThread().getId() + ", Error: " + t.getMessage());
-
-                getActivity().runOnUiThread(() -> {
-                    if (mProgressBar != null) {
-                        mProgressBar.setVisibility(View.GONE);
-                    }
-                });
-            }
-        });
     }
 
     @Override
@@ -81,14 +84,9 @@ public class BooksFragment extends BaseFragment<Book> {
 
             mRecyclerView.setAdapter(mAdapter);
         }
-        if(mProgressBar != null) {
+        if (mProgressBar != null) {
             mProgressBar.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void loadBooks(Callback<BookInfo> callback) {
-        IDoubanService movieService = DoubanManager.createDoubanService();
-        movieService.searchBooks("黑客与画家").enqueue(callback);
     }
 
 }

@@ -18,10 +18,10 @@ import com.shrimpcolo.johnnytam.idouban.entity.HotMoviesInfo;
 import com.shrimpcolo.johnnytam.idouban.entity.Movies;
 import com.shrimpcolo.johnnytam.idouban.net.DoubanManager;
 import com.shrimpcolo.johnnytam.idouban.net.IDoubanService;
+import com.shrimpcolo.johnnytam.idouban.utils.ToastUtil;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,47 +38,42 @@ public class MoviesFragment extends BaseFragment<Movies> {
         return view;
     }
 
-    private void loadMovies(Callback<HotMoviesInfo> callback) {
-        IDoubanService movieService = DoubanManager.createDoubanService();
-        movieService.searchHotMovies().enqueue(callback);
-    }
-
     @Override
     public void loadData() {
         //get the movies data from the douban
-        loadMovies(new Callback<HotMoviesInfo>() {
-            @Override
-            public void onResponse(Call<HotMoviesInfo> call, Response<HotMoviesInfo> response) {
-                Log.d(HomeActivity.TAG, "===> onResponse: Thread.Id = " + Thread.currentThread().getId());
-                mDataList = response.body().getMovies();
-
-                //debug
-                Log.e(HomeActivity.TAG, "===> Response, size = " + mDataList.size());
-                mAdapter.setData(mDataList);
-
-                getActivity().runOnUiThread(() -> {
-                    if(mProgressBar != null) {
-                        mProgressBar.setVisibility(View.GONE);
-                    }
-                });
-
-            }
-
-            @Override
-            public void onFailure(Call<HotMoviesInfo> call, Throwable t) {
-                Log.d(HomeActivity.TAG, "===> onFailure: Thread.Id = "
-                        + Thread.currentThread().getId() + ", Error: " + t.getMessage());
-
-                getActivity().runOnUiThread(new Runnable() {
+        IDoubanService movieService = DoubanManager.createDoubanService();
+        movieService.searchHotMovies()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<HotMoviesInfo>() {
                     @Override
-                    public void run() {
+                    public void onCompleted() {
+                        Log.e(HomeActivity.TAG, "===> movieService onCompleted !!!");
+
+                        if(mProgressBar != null) {
+                            mProgressBar.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(HomeActivity.TAG, "===> movieService onError: Thread.Id = "
+                                + Thread.currentThread().getId() + ", Error: " + e.getMessage());
+                        ToastUtil.getInstance().showToast(getContext(), getResources().getString(R.string.msg_error));
+
                         if (mProgressBar != null) {
                             mProgressBar.setVisibility(View.GONE);
                         }
                     }
+
+                    @Override
+                    public void onNext(HotMoviesInfo hotMoviesInfo) {
+                        mDataList = hotMoviesInfo.getMovies();
+                        Log.e(HomeActivity.TAG, "===> movieService Response, size = " + mDataList.size());
+
+                        mAdapter.setData(mDataList);
+
+                    }
                 });
-            }
-        });
     }
 
     @Override
