@@ -27,55 +27,52 @@ public class LoginActivity extends BaseActivity {
 
     private void showThirdPartLogin() {
         ThirdPartyLogin tpl = new ThirdPartyLogin();
-        tpl.setOnLoginListener(new OnLoginListener() {
-            public void onSignin(String platform, HashMap<String, Object> hashMap) {
+        tpl.setOnLoginListener((platform, hashMap) -> {
 
-                //解析各种平台的数据，统一放到UserInfo中使用
-                Log.e(HomeActivity.TAG, "====> " + platform);
-                UserInfo userInfo = new UserInfo();
+            //解析各种平台的数据，统一放到UserInfo中使用
+            Log.e(HomeActivity.TAG, "====> " + platform);
+            UserInfo userInfo = new UserInfo();
 
-                Iterator ite = hashMap.entrySet().iterator();
-                while (ite.hasNext()) {
-                    Map.Entry entry = (Map.Entry) ite.next();
-                    Object key = entry.getKey();
-                    Object value = entry.getValue();
-                    //Log.e(HomeActivity.TAG, " " + key + "： " + value);
+            Iterator ite = hashMap.entrySet().iterator();
+            while (ite.hasNext()) {
+                Map.Entry entry = (Map.Entry) ite.next();
+                Object key = entry.getKey();
+                Object value = entry.getValue();
+                //Log.e(HomeActivity.TAG, " " + key + "： " + value);
 
-                    if (platform.equals(QQ.NAME)) {
-                        if (key.equals("nickname")) {
-                            userInfo.setUserName((String) value);
+                if (platform.equals(QQ.NAME)) {
+                    if (key.equals("nickname")) {
+                        userInfo.setUserName((String) value);
 
-                        } else if (key.equals("figureurl_qq_2")) {
-                            userInfo.setUserIcon((String) value);
+                    } else if (key.equals("figureurl_qq_2")) {
+                        userInfo.setUserIcon((String) value);
 
-                        } else if (key.equals("gender")) {
-                            UserInfo.Gender gender = value.equals("男") ? UserInfo.Gender.MALE : UserInfo.Gender.FEMALE;
-                            userInfo.setUserGender(gender);
+                    } else if (key.equals("gender")) {
+                        UserInfo.Gender gender = value.equals("男") ? UserInfo.Gender.MALE : UserInfo.Gender.FEMALE;
+                        userInfo.setUserGender(gender);
 
-                        }
-                    } else if (platform.equals(SinaWeibo.NAME)) {
-                        if(key.equals("name")) {
-                            userInfo.setUserName((String) value);
-
-                        }else if(key.equals("avatar_hd")) {
-                            userInfo.setUserIcon((String) value);
-
-                        }else if(key.equals("gender")) {
-                            UserInfo.Gender gender = value.equals("m") ? UserInfo.Gender.MALE : UserInfo.Gender.FEMALE;
-                            userInfo.setUserGender(gender);
-                        }
-                    } else {//wechat 个人无法申请微信登录
                     }
-                }//end while
+                } else if (platform.equals(SinaWeibo.NAME)) {
+                    if(key.equals("name")) {
+                        userInfo.setUserName((String) value);
+
+                    }else if(key.equals("avatar_hd")) {
+                        userInfo.setUserIcon((String) value);
+
+                    }else if(key.equals("gender")) {
+                        UserInfo.Gender gender = value.equals("m") ? UserInfo.Gender.MALE : UserInfo.Gender.FEMALE;
+                        userInfo.setUserGender(gender);
+                    }
+                } else {//wechat 个人无法申请微信登录
+                }
+            }//end while
 
 
-                Intent intent = new Intent();
-                intent.putExtra("userInfo", userInfo);
+            Intent intent = new Intent();
+            intent.putExtra("userInfo", userInfo);
 
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-
+            setResult(RESULT_OK, intent);
+            finish();
         });
         tpl.show(this);
     }

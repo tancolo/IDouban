@@ -71,13 +71,8 @@ public class HomeActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
 
         //init DrawerLayout
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -125,98 +120,92 @@ public class HomeActivity extends BaseActivity {
         profileName = (TextView) headView.findViewById(R.id.profile_name);
 
         if (profileView != null) {
-            profileView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.e(TAG, "===> onClick...!");
-                    mDrawerLayout.closeDrawers();
-                    mNavigationView.getMenu().getItem(0).setChecked(true);
-                }
+            profileView.setOnClickListener(view -> {
+                Log.e(TAG, "===> onClick...!");
+                mDrawerLayout.closeDrawers();
+                mNavigationView.getMenu().getItem(0).setChecked(true);
             });
         }
     }
 
     private void setupDrawerNavigation(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                FragmentTransaction transacation = getSupportFragmentManager().beginTransaction();
-                Log.e(TAG, "===> getFragments.size = " + getSupportFragmentManager().getFragments().size());
+        navigationView.setNavigationItemSelectedListener(item -> {
+            FragmentTransaction transacation = getSupportFragmentManager().beginTransaction();
+            Log.e(TAG, "===> getFragments.size = " + getSupportFragmentManager().getFragments().size());
 
-                //for show or hide fragment
-                switch (item.getItemId()) {
-                    case R.id.navigation_item_movies:
-                    case R.id.navigation_item_book:
-                        if (mLinearLayout.getVisibility() == View.GONE) {
-                            mLinearLayout.setVisibility(View.VISIBLE);
-                        }
-                        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                            if (fragment.getTag().equals(MENU_BLOG) || fragment.getTag().equals(MENU_ABOUT)) {
-                                transacation.hide(fragment);
-                            } else {
-                                transacation.show(fragment);
-                            }
-                        }
-                        break;
-                    case R.id.navigation_item_blog:
-                    case R.id.navigation_item_about:
-                        if (mLinearLayout.getVisibility() == View.VISIBLE) {
-                            mLinearLayout.setVisibility(View.GONE);
-                        }
-                        break;
-                }
-
-                switch (item.getItemId()) {
-                    case R.id.navigation_item_movies:
-                        mViewPager.setCurrentItem(TAB_MOVIES);
-                        break;
-                    case R.id.navigation_item_book:
-                        mViewPager.setCurrentItem(TAB_BOOK);
-                        break;
-                    case R.id.navigation_item_about:
-                    case R.id.navigation_item_blog:
-                        String frgTag;
-                        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-                            frgTag = fragment.getTag();
-                            if ((item.getItemId() == R.id.navigation_item_blog && frgTag.equals(MENU_BLOG))
-                                    || (item.getItemId() == R.id.navigation_item_about && frgTag.equals(MENU_ABOUT))) {
-                                transacation.show(fragment);
-                            } else {
-                                transacation.hide(fragment);
-                            }
-                        }
-                        break;
-
-                    case R.id.navigation_item_login:
-                        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
-                        //startActivity(intent);
-                        break;
-
-                    case R.id.navigation_item_logout:
-                        ShareSDK.initSDK(HomeActivity.this);
-                        Platform qq = ShareSDK.getPlatform(HomeActivity.this, QQ.NAME);
-                        Platform weibo = ShareSDK.getPlatform(HomeActivity.this, SinaWeibo.NAME);
-                        Platform wechat = ShareSDK.getPlatform(HomeActivity.this, Wechat.NAME);
-
-                        if (qq.isValid()) {
-                            Log.e(TAG, "remove QQ account!");
-                            qq.removeAccount(true);
-                        } else if (weibo.isValid()) {
-                            Log.e(TAG, "remove weibo account!");
-                            weibo.removeAccount(true);
-                        } else if (wechat.isValid()) {
-                            Log.e(TAG, "remove wechat account!");
-                            wechat.removeAccount(true);
+            //for show or hide fragment
+            switch (item.getItemId()) {
+                case R.id.navigation_item_movies:
+                case R.id.navigation_item_book:
+                    if (mLinearLayout.getVisibility() == View.GONE) {
+                        mLinearLayout.setVisibility(View.VISIBLE);
+                    }
+                    for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                        if (fragment.getTag().equals(MENU_BLOG) || fragment.getTag().equals(MENU_ABOUT)) {
+                            transacation.hide(fragment);
                         } else {
+                            transacation.show(fragment);
                         }
-                        break;
-                }
-                transacation.commit();
-                item.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                return true;
+                    }
+                    break;
+                case R.id.navigation_item_blog:
+                case R.id.navigation_item_about:
+                    if (mLinearLayout.getVisibility() == View.VISIBLE) {
+                        mLinearLayout.setVisibility(View.GONE);
+                    }
+                    break;
             }
+
+            switch (item.getItemId()) {
+                case R.id.navigation_item_movies:
+                    mViewPager.setCurrentItem(TAB_MOVIES);
+                    break;
+                case R.id.navigation_item_book:
+                    mViewPager.setCurrentItem(TAB_BOOK);
+                    break;
+                case R.id.navigation_item_about:
+                case R.id.navigation_item_blog:
+                    String frgTag;
+                    for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                        frgTag = fragment.getTag();
+                        if ((item.getItemId() == R.id.navigation_item_blog && frgTag.equals(MENU_BLOG))
+                                || (item.getItemId() == R.id.navigation_item_about && frgTag.equals(MENU_ABOUT))) {
+                            transacation.show(fragment);
+                        } else {
+                            transacation.hide(fragment);
+                        }
+                    }
+                    break;
+
+                case R.id.navigation_item_login:
+                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                    //startActivity(intent);
+                    break;
+
+                case R.id.navigation_item_logout:
+                    ShareSDK.initSDK(HomeActivity.this);
+                    Platform qq = ShareSDK.getPlatform(HomeActivity.this, QQ.NAME);
+                    Platform weibo = ShareSDK.getPlatform(HomeActivity.this, SinaWeibo.NAME);
+                    Platform wechat = ShareSDK.getPlatform(HomeActivity.this, Wechat.NAME);
+
+                    if (qq.isValid()) {
+                        Log.e(TAG, "remove QQ account!");
+                        qq.removeAccount(true);
+                    } else if (weibo.isValid()) {
+                        Log.e(TAG, "remove weibo account!");
+                        weibo.removeAccount(true);
+                    } else if (wechat.isValid()) {
+                        Log.e(TAG, "remove wechat account!");
+                        wechat.removeAccount(true);
+                    } else {
+                    }
+                    break;
+            }
+            transacation.commit();
+            item.setChecked(true);
+            mDrawerLayout.closeDrawers();
+            return true;
         });
     }
 

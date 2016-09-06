@@ -56,12 +56,9 @@ public class MoviesFragment extends BaseFragment<Movies> {
                 Log.e(HomeActivity.TAG, "===> Response, size = " + mDataList.size());
                 mAdapter.setData(mDataList);
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(mProgressBar != null) {
-                            mProgressBar.setVisibility(View.GONE);
-                        }
+                getActivity().runOnUiThread(() -> {
+                    if(mProgressBar != null) {
+                        mProgressBar.setVisibility(View.GONE);
                     }
                 });
 

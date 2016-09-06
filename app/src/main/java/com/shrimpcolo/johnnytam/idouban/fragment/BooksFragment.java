@@ -49,12 +49,9 @@ public class BooksFragment extends BaseFragment<Book> {
                 Log.e(HomeActivity.TAG, "===>Book Response, size = " + mDataList.size());
                 mAdapter.setData(mDataList);
                 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mProgressBar != null) {
-                            mProgressBar.setVisibility(View.GONE);
-                        }
+                getActivity().runOnUiThread(() -> {
+                    if (mProgressBar != null) {
+                        mProgressBar.setVisibility(View.GONE);
                     }
                 });
             }
@@ -64,12 +61,9 @@ public class BooksFragment extends BaseFragment<Book> {
                 Log.d(HomeActivity.TAG, "===>Book onFailure: Thread.Id = "
                         + Thread.currentThread().getId() + ", Error: " + t.getMessage());
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mProgressBar != null) {
-                            mProgressBar.setVisibility(View.GONE);
-                        }
+                getActivity().runOnUiThread(() -> {
+                    if (mProgressBar != null) {
+                        mProgressBar.setVisibility(View.GONE);
                     }
                 });
             }
