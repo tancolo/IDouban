@@ -3,7 +3,6 @@ package com.shrimpcolo.johnnytam.idouban.net;
 import com.shrimpcolo.johnnytam.idouban.entity.BookInfo;
 import com.shrimpcolo.johnnytam.idouban.entity.HotMoviesInfo;
 
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -19,4 +18,6 @@ public interface IDoubanService {
 
     @GET("book/search")
     Observable<BookInfo> searchBooks(@Query("q") String name);
+
+
 }

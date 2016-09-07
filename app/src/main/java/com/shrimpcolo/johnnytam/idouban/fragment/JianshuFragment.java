@@ -18,11 +18,18 @@ import android.widget.TextView;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.activity.detail.WebViewActivity;
 import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
+import com.shrimpcolo.johnnytam.idouban.entity.Blog;
+import com.shrimpcolo.johnnytam.idouban.entity.BlogInfo;
+import com.shrimpcolo.johnnytam.idouban.net.IShrimpColoService;
+import com.shrimpcolo.johnnytam.idouban.net.ShrimpColoManager;
 import com.shrimpcolo.johnnytam.idouban.ui.DividerItemDecoration;
+import com.shrimpcolo.johnnytam.idouban.utils.ToastUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,7 +37,7 @@ import java.util.List;
 public class JianshuFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private List<HashMap<String, String>> titleList = new ArrayList<>();
+    private List<Blog> mBlog = new ArrayList<>();
 
     public JianshuFragment() {
         // Required empty public constructor
@@ -39,38 +46,31 @@ public class JianshuFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        //init the raw data
-        String[] title = {
-                "RecyclerView的重构之路(一)",
-                "RecyclerView的重构之路(二)",
-                "RecyclerView的重构之路(三)",
-                "RecyclerView的重构之路(四)",
-                "RecyclerView的重构之路(五)",
-                "RecyclerView的重构之路(六)",
-                "RecyclerView的重构之路(七)",
-                "RecyclerView的重构之路(八)",
-                "又一个寡头时代的来临"
-        };
-        String[] url = {
-                "http://www.jianshu.com/p/99cd83778373",
-                "http://www.jianshu.com/p/81270f444a6f",
-                "http://www.jianshu.com/p/a5d60fa90d17",
-                "http://www.jianshu.com/p/5eac09f5bb92",
-                "http://www.jianshu.com/p/c4a8bfbe1f40",
-                "http://www.jianshu.com/p/b1ea462f5602",
-                "http://www.jianshu.com/p/9665955103c0",
-                "http://www.jianshu.com/p/98399b00ae78",
-                "http://www.jianshu.com/p/e9f4736fa08a"
-        };
 
-        //init the data
-        for (int i = 0; i < title.length; i++) {
-            HashMap<String, String> map = new HashMap<>();
-            map.put("title", title[i]);
-            map.put("url", url[i]);
-            titleList.add(map);
-        }
+        IShrimpColoService shrimpColoService = ShrimpColoManager.createShrimpService();
+        shrimpColoService.getBlog()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<BlogInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.e(HomeActivity.TAG, "onCompleted!!!");
+                    }
 
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(HomeActivity.TAG, "onError: " + e.getMessage());
+                        ToastUtil.getInstance().showToast(getContext(), getString(R.string.msg_error));
+                    }
+
+                    @Override
+                    public void onNext(BlogInfo blog) {
+                        Log.e(HomeActivity.TAG, "onNext!!! ");
+                        mBlog = blog.getBlog();
+                        Log.e(HomeActivity.TAG, "blog list size = " + mBlog.size());
+                        BlogAdapter blogAdapter = new BlogAdapter(mBlog, R.layout.recyclerview_jianshu_item);
+                        mRecyclerView.setAdapter(blogAdapter);
+                    }
+                });
     }
 
     @Override
@@ -92,19 +92,17 @@ public class JianshuFragment extends Fragment {
             final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
-
-            BlogAdapter blogAdapter = new BlogAdapter(titleList, R.layout.recyclerview_jianshu_item);
-            mRecyclerView.setAdapter(blogAdapter);
         }
     }
 
     static class BlogAdapter extends RecyclerView.Adapter<BlogViewHolder> {
 
-        private List<HashMap<String, String>> mBlogDataList;
+        private List<Blog> mBlogDataList;
 
         @LayoutRes
         private int layoutResId;
-        public BlogAdapter(@NonNull List<HashMap<String, String>> list, @LayoutRes int layoutResId) {
+
+        public BlogAdapter(@NonNull List<Blog> list, @LayoutRes int layoutResId) {
             this.layoutResId = layoutResId;
             mBlogDataList = list;
         }
@@ -117,7 +115,7 @@ public class JianshuFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(BlogViewHolder holder, int position) {
-            if(holder == null) return;
+            if (holder == null) return;
 
             holder.updateBlog(mBlogDataList.get(position));
         }
@@ -128,10 +126,10 @@ public class JianshuFragment extends Fragment {
         }
     }
 
-    static class BlogViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    static class BlogViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView mBlogTitle;
-        private HashMap<String, String> blogMap;
+        private Blog mBlog;
 
         public BlogViewHolder(View itemView) {
             super(itemView);
@@ -139,20 +137,20 @@ public class JianshuFragment extends Fragment {
             mBlogTitle.setOnClickListener(this);
         }
 
-        public void updateBlog(HashMap<String, String> blog) {
-            mBlogTitle.setText(blog.get("title"));
-            blogMap = blog;
+        public void updateBlog(Blog blog) {
+            mBlogTitle.setText(blog.getName());
+            mBlog = blog;
         }
 
         @Override
         public void onClick(View v) {
-            if(blogMap == null || itemView == null) return;
+            if (mBlog == null || itemView == null) return;
 
             Context context = itemView.getContext();
-            if(context == null) return;
+            if (context == null) return;
 
             Intent intent = new Intent(context, WebViewActivity.class);
-            intent.putExtra("website", blogMap.get("url"));
+            intent.putExtra("website", mBlog.getUrl());
             context.startActivity(intent);
         }
     }
