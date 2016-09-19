@@ -14,7 +14,7 @@
 ##网络请求框架
 - okHttp
 - Retrofit
-一开始使用okHttp， 后来选择Retrofit （Retrofit + RxJava已实现未提交）。
+一开始使用okHttp， 后来选择Retrofit （Retrofit + RxJava已提交在Dev分支）。
 
 网络数据来源于豆瓣的公开接口：
 
