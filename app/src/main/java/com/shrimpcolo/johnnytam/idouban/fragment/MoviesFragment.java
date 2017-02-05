@@ -11,17 +11,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.adapter.ModelAdapter;
+import com.shrimpcolo.johnnytam.idouban.adapter.RxModelAdapter;
 import com.shrimpcolo.johnnytam.idouban.entity.HotMoviesInfo;
 import com.shrimpcolo.johnnytam.idouban.entity.Movies;
 import com.shrimpcolo.johnnytam.idouban.net.DoubanManager;
 import com.shrimpcolo.johnnytam.idouban.net.IDoubanService;
 import com.shrimpcolo.johnnytam.idouban.utils.ToastUtil;
 
+import java.util.List;
+
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Func1;
+
+import static com.shrimpcolo.johnnytam.idouban.net.DoubanManager.createDoubanService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,20 +48,24 @@ public class MoviesFragment extends BaseFragment<Movies> {
         return view;
     }
 
+    public Observable<List<Movies>> loadRxData() {
+        return createDoubanService().searchHotMovies()
+                .map(hotMoviesInfo -> hotMoviesInfo.getMovies())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> hideProgress());
+    }
+
     @Override
     public void loadData() {
         //get the movies data from the douban
-        IDoubanService movieService = DoubanManager.createDoubanService();
-        movieService.searchHotMovies()
+        createDoubanService()
+                .searchHotMovies()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<HotMoviesInfo>() {
                     @Override
                     public void onCompleted() {
                         Log.e(HomeActivity.TAG, "===> movieService onCompleted !!!");
-
-                        if(mProgressBar != null) {
-                            mProgressBar.setVisibility(View.GONE);
-                        }
+                        hideProgress();
                     }
 
                     @Override
@@ -83,7 +97,8 @@ public class MoviesFragment extends BaseFragment<Movies> {
             final GridLayoutManager layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
             mRecyclerView.setLayoutManager(layoutManager);
 
-            mAdapter = new ModelAdapter<>(mDataList, R.layout.recyclerview_movies_item);
+//            mAdapter = new ModelAdapter<>(mDataList, R.layout.recyclerview_movies_item);
+            mAdapter = new RxModelAdapter<>(loadRxData(), R.layout.recyclerview_movies_item);
 
             mRecyclerView.setAdapter(mAdapter);
         }

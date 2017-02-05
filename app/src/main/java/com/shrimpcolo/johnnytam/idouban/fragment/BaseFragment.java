@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import com.shrimpcolo.johnnytam.idouban.activity.home.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.adapter.BaseAdapter;
+import com.shrimpcolo.johnnytam.idouban.adapter.ModelAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public abstract class BaseFragment<T> extends Fragment{
 
     protected List<T> mDataList = new ArrayList<>();
     protected RecyclerView mRecyclerView;
-    protected BaseAdapter mAdapter;
+    protected ModelAdapter<T> mAdapter;
 
     protected ProgressBar mProgressBar;
 
@@ -33,7 +35,7 @@ public abstract class BaseFragment<T> extends Fragment{
         super.onAttach(context);
         Log.d(HomeActivity.TAG, "===> onAttach: " + context.getClass().getName());
 
-        loadData();
+        //loadData();
     }
 
     @Override
@@ -41,6 +43,12 @@ public abstract class BaseFragment<T> extends Fragment{
         super.onActivityCreated(savedInstanceState);
 
         initView();
+    }
+
+    public void hideProgress() {
+        if (mProgressBar != null) {
+            mProgressBar.setVisibility(View.GONE);
+        }
     }
 
     public abstract void loadData();
