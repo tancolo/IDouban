@@ -1,10 +1,9 @@
-package com.shrimpcolo.johnnytam.idouban.movie;
+package com.shrimpcolo.johnnytam.idouban.movies;
 
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -13,7 +12,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +37,7 @@ import retrofit2.Response;
  * A simple {@link Fragment} subclass.
  */
 public class MoviesFragment extends Fragment {
-    private List<Movies> mMoviesList = new ArrayList<>();
+    private List<Movie> mMoviesList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private MoviesAdapter mMovieAdapter;
 
@@ -104,13 +102,13 @@ public class MoviesFragment extends Fragment {
 
     //Movie's Adapter and view holder
     static class MoviesAdapter extends RecyclerView.Adapter<MoviesViewHolder> {
-        private List<Movies> movies;
+        private List<Movie> movies;
         private Context context;
 
         @LayoutRes
         private int layoutResId;
 
-        public MoviesAdapter(Context context, @NonNull List<Movies> movies, @LayoutRes int layoutResId) {
+        public MoviesAdapter(Context context, @NonNull List<Movie> movies, @LayoutRes int layoutResId) {
             this.movies = movies;
             this.layoutResId = layoutResId;
             this.context = context;
@@ -134,7 +132,7 @@ public class MoviesFragment extends Fragment {
             return movies.size();
         }
 
-        public void setData(List<Movies> movies) {
+        public void setData(List<Movie> movies) {
             this.movies = movies;
             notifyDataSetChanged();
         }
@@ -146,7 +144,7 @@ public class MoviesFragment extends Fragment {
         TextView mMovieTitle;
         RatingBar mMovieStars;
         TextView mMovieRatingAverage;
-        Movies movie;
+        Movie movie;
 
         public MoviesViewHolder(View itemView) {
             super(itemView);
@@ -159,7 +157,7 @@ public class MoviesFragment extends Fragment {
             itemView.setOnClickListener(this);
         }
 
-        public void updateMovie(Movies movie) {
+        public void updateMovie(Movie movie) {
             if (movie == null) return;
             this.movie = movie;
 

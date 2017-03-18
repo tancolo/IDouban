@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.movie;
+package com.shrimpcolo.johnnytam.idouban.movies;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

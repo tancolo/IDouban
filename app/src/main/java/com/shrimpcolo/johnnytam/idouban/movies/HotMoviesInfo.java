@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.movie;
+package com.shrimpcolo.johnnytam.idouban.movies;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -35,7 +35,7 @@ public class HotMoviesInfo {
      */
 
     @SerializedName("subjects")
-    private List<Movies> movies;
+    private List<Movie> movies;
 
     public int getCount() {
         return count;
@@ -69,11 +69,11 @@ public class HotMoviesInfo {
         this.title = title;
     }
 
-    public List<Movies> getMovies() {
+    public List<Movie> getMovies() {
         return movies;
     }
 
-    public void setMovies(List<Movies> movies) {
+    public void setMovies(List<Movie> movies) {
         this.movies = movies;
     }
 

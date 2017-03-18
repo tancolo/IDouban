@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.shrimpcolo.johnnytam.idouban.book.BooksFragment;
-import com.shrimpcolo.johnnytam.idouban.movie.MoviesFragment;
+import com.shrimpcolo.johnnytam.idouban.books.BooksFragment;
+import com.shrimpcolo.johnnytam.idouban.movies.MoviesFragment;
 
 import java.util.ArrayList;
 import java.util.List;

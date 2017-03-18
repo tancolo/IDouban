@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.movie;
+package com.shrimpcolo.johnnytam.idouban.movies;
 
 import java.io.Serializable;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Johnny Tam on 2016/7/18.
  */
-public class Movies implements Serializable {
+public class Movie implements Serializable {
     /**
      * max : 10
      * average : 5.3
