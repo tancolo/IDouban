@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.movies;
+package com.shrimpcolo.johnnytam.idouban.beans;
 
 import java.io.Serializable;
 import java.util.List;
