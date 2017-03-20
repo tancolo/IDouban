@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -57,6 +58,16 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Log.e(HomeActivity.TAG, "MoviesFragment onAttach, presenter: " + mPresenter);
+        if(mPresenter != null) {
+            mPresenter.start();
+        }
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mMovieAdapter = new MovieAdapter(getContext(), mMoviesList, R.layout.recyclerview_movies_item);
@@ -91,10 +102,8 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     @Override
     public void onResume() {
         super.onResume();
-        Log.e(HomeActivity.TAG,  TAG + " onResume, Presenter.start(): " + mPresenter);
-        if(mPresenter != null) {
-            mPresenter.start();
-        }
+//        Log.e(HomeActivity.TAG,  TAG + " onResume, Presenter.start(): " + mPresenter
+//        +"\n" + Log.getStackTraceString(new Throwable()));
     }
 
     @Override
@@ -112,6 +121,21 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     @Override
     public void showMovieDetailUi() {
 
+    }
+
+    @Override
+    public void setLoadingIndicator(boolean active) {
+        if(getView() == null) return;
+
+        final ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.pgb_loading);
+
+        Log.e(HomeActivity.TAG, "\n\n setLoadingIndicator: active " + active);
+
+        if(active) {
+            progressBar.setVisibility(View.VISIBLE);
+        }else {
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     @Override

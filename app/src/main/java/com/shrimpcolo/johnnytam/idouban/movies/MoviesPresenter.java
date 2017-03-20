@@ -53,7 +53,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private void loadMovies(boolean forceUpdate, final boolean showLoadingUI){
         if(showLoadingUI){
             //MoviesFragment需要显示Loading 界面
-//            mMoviesView.setLoadingIndicator(true);
+            mMoviesView.setLoadingIndicator(true);
         }
 
         if(forceUpdate){
@@ -63,11 +63,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                     Log.d(HomeActivity.TAG, "===> onResponse: Thread.Id = " + Thread.currentThread().getId());
                     List<Movie> moviesList = response.body().getMovies();
                     //debug
-                    Log.e(HomeActivity.TAG, "===> Response, size = " + moviesList.size());
+                    Log.e(HomeActivity.TAG, "===> Response, size = " + moviesList.size()
+                            + " showLoadingUI: " + showLoadingUI);
 
                     //获取数据成功，Loading UI消失
                     if(showLoadingUI) {
-                        //mMoviesView.setLoadingIndicator(false);//未添加接口方法
+                        mMoviesView.setLoadingIndicator(false);
                     }
 
                     processMovies(moviesList);
@@ -77,6 +78,11 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 public void onFailure(Call<HotMoviesInfo> call, Throwable t) {
                     Log.d(HomeActivity.TAG, "===> onFailure: Thread.Id = "
                             + Thread.currentThread().getId() + ", Error: " + t.getMessage());
+
+                    //获取数据成功，Loading UI消失
+                    if(showLoadingUI) {
+                        mMoviesView.setLoadingIndicator(false);
+                    }
                     //mMoviesView.showLoadingMoviesError();
                 }
             });

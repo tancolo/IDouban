@@ -48,7 +48,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        Log.e(TAG, SUB + "onCreate!");
+        Log.e(TAG, SUB + " onCreate!");
         //初始化控件
         mViewPager = (ViewPager) findViewById(R.id.douban_view_pager);
         setupViewPager(mViewPager);
@@ -66,7 +66,7 @@ public class HomeActivity extends AppCompatActivity {
         DoubanPagerAdapter pagerAdapter = new DoubanPagerAdapter(getSupportFragmentManager());
         MoviesFragment moviesFragment = MoviesFragment.newInstance();
 
-        Log.e(TAG, SUB + "setupViewPager, moviesFragment = " + moviesFragment);
+        Log.e(TAG, SUB + " setupViewPager, moviesFragment = " + moviesFragment);
 
         pagerAdapter.addFragment(moviesFragment
                 , getApplicationContext().getResources().getString(R.string.tab_movies_fragment));
@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void createPresenter(MoviesContract.View fragmentView){
-        Log.e(TAG, SUB + "createPresenter, fragmentView = " + fragmentView);
+        Log.e(TAG, SUB + " createPresenter, fragmentView = " + fragmentView);
         //Create the movies presenter
         mMoviesPresenter = new MoviesPresenter(DoubanManager.createDoubanService(), fragmentView);
     }

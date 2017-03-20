@@ -19,6 +19,8 @@ public interface MoviesContract {
         void showNoMovies();
 
         void showMovieDetailUi();
+
+        void setLoadingIndicator(boolean active);
     }
 
     interface Presenter extends BasePresenter {
