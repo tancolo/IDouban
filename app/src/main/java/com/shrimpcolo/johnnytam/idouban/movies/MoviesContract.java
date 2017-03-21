@@ -18,12 +18,15 @@ public interface MoviesContract {
 
         void showNoMovies();
 
-        void showMovieDetailUi();
+        void showMovieDetailUi(String movieName);//not used
 
         void setLoadingIndicator(boolean active);
     }
 
     interface Presenter extends BasePresenter {
+
         void loadMovies(boolean forceUpdate);
+
+        void openMovieDetails(Movie clickedMovie);//not used
     }
 }

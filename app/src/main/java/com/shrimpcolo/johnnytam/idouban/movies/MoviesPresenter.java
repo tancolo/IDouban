@@ -46,6 +46,10 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     }
 
     @Override
+    public void openMovieDetails(Movie clickedMovie) {
+    }
+
+    @Override
     public void start() {
         loadMovies(false);
     }
@@ -83,11 +87,10 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                     if(showLoadingUI) {
                         mMoviesView.setLoadingIndicator(false);
                     }
-                    //mMoviesView.showLoadingMoviesError();
+                    processEmptyTasks();
                 }
             });
         }
-
     }
 
     private void processMovies(List<Movie> movies) {

@@ -25,7 +25,8 @@ import android.widget.TextView;
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.beans.Movie;
-import com.shrimpcolo.johnnytam.idouban.moviesdetail.MovieDetailActivity;
+import com.shrimpcolo.johnnytam.idouban.moviedetail.MovieDetailActivity;
+import com.shrimpcolo.johnnytam.idouban.utils.ConstContent;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,9 +43,9 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 
     private MoviesContract.Presenter mPresenter;
 
-    private List<Movie> mMoviesList = new ArrayList<>();
-
     private RecyclerView mRecyclerView;
+
+    private View mNoMoviesView;
 
     private MovieAdapter mMovieAdapter;
 
@@ -53,7 +54,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     }
 
     public static MoviesFragment newInstance(){
-        Log.e(HomeActivity.TAG, "MoviesFragment newInstance!");
+        //Log.e(HomeActivity.TAG, "MoviesFragment newInstance!");
         return new MoviesFragment();
     }
 
@@ -61,7 +62,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Log.e(HomeActivity.TAG, "MoviesFragment onAttach, presenter: " + mPresenter);
+        //Log.e(HomeActivity.TAG, "MoviesFragment onAttach, presenter: " + mPresenter);
         if(mPresenter != null) {
             mPresenter.start();
         }
@@ -70,18 +71,19 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMovieAdapter = new MovieAdapter(getContext(), mMoviesList, R.layout.recyclerview_movies_item);
-        Log.e(HomeActivity.TAG,  TAG + " onCreate()");
+        mMovieAdapter = new MovieAdapter(new ArrayList<Movie>(0), R.layout.recyclerview_movies_item);
+        //Log.e(HomeActivity.TAG,  TAG + " onCreate()");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e(HomeActivity.TAG,  TAG + " onCreateView()");
+        //Log.e(HomeActivity.TAG,  TAG + " onCreateView()");
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_hot_movies);
+        mNoMoviesView = view.findViewById(R.id.ll_no_movies);
         return view;
     }
 
@@ -89,7 +91,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Log.e(HomeActivity.TAG,  TAG + " onActivityCreated()");
+        //Log.e(HomeActivity.TAG,  TAG + " onActivityCreated()");
 
         if (mRecyclerView != null) {
             mRecyclerView.setHasFixedSize(true);
@@ -102,25 +104,26 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     @Override
     public void onResume() {
         super.onResume();
-//        Log.e(HomeActivity.TAG,  TAG + " onResume, Presenter.start(): " + mPresenter
-//        +"\n" + Log.getStackTraceString(new Throwable()));
     }
 
     @Override
     public void showMovies(List<Movie> movies) {
-        Log.e(HomeActivity.TAG,  TAG + " showMovies ");
+        //Log.e(HomeActivity.TAG,  TAG + " showMovies ");
         mMovieAdapter.replaceData(movies);
+
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mNoMoviesView.setVisibility(View.GONE);
 
     }
 
     @Override
     public void showNoMovies() {
-
+        mRecyclerView.setVisibility(View.GONE);
+        mNoMoviesView.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void showMovieDetailUi() {
-
+    public void showMovieDetailUi(String movieName) {
     }
 
     @Override
@@ -129,7 +132,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 
         final ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.pgb_loading);
 
-        Log.e(HomeActivity.TAG, "\n\n setLoadingIndicator: active " + active);
+        //Log.e(HomeActivity.TAG, "\n\n setLoadingIndicator: active " + active);
 
         if(active) {
             progressBar.setVisibility(View.VISIBLE);
@@ -140,7 +143,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 
     @Override
     public void setPresenter(MoviesContract.Presenter presenter) {
-        Log.e(HomeActivity.TAG,  TAG + " setPresenter ");
+        //Log.e(HomeActivity.TAG,  TAG + " setPresenter ");
         mPresenter = presenter;
     }
 
@@ -148,15 +151,13 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     static class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
         private List<Movie> mMovies;
-        private Context context;
 
         @LayoutRes
         private int layoutResId;
 
-        public MovieAdapter(Context context, @NonNull List<Movie> movies, @LayoutRes int layoutResId) {
+        public MovieAdapter(@NonNull List<Movie> movies, @LayoutRes int layoutResId) {
             setList(movies);
             this.layoutResId = layoutResId;
-            this.context = context;
         }
 
         private void setList(List<Movie> movies) {
@@ -165,7 +166,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 
         @Override
         public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(context).inflate(layoutResId, parent, false);
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
             return new MovieViewHolder(itemView);
         }
 
@@ -245,7 +246,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
             if (context == null) return;
 
             Intent intent = new Intent(context, MovieDetailActivity.class);
-            intent.putExtra("movie", movie);
+            intent.putExtra(ConstContent.INTENT_EXTRA_MOVIE, movie);
 
             if (context instanceof Activity) {
                 Activity activity = (Activity) context;

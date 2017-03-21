@@ -30,8 +30,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
 
-    private MoviesPresenter mMoviesPresenter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
     private void createPresenter(MoviesContract.View fragmentView){
         Log.e(TAG, SUB + " createPresenter, fragmentView = " + fragmentView);
         //Create the movies presenter
-        mMoviesPresenter = new MoviesPresenter(DoubanManager.createDoubanService(), fragmentView);
+        MoviesPresenter mMoviesPresenter = new MoviesPresenter(DoubanManager.createDoubanService(), fragmentView);
     }
 
     static class DoubanPagerAdapter extends FragmentPagerAdapter {

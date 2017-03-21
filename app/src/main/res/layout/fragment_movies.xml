@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
             android:text="@string/hot_movies"
             android:textColor="@color/primary_text"
             android:textSize="20sp" />
@@ -23,7 +24,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="10dp" />
+
+        <LinearLayout
+            android:id="@+id/ll_no_movies"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_movies"/>
+        </LinearLayout>
     </LinearLayout>
+
     <ProgressBar
         android:id="@+id/pgb_loading"
         android:layout_width="wrap_content"

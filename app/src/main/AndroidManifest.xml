@@ -20,7 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".moviesdetail.MovieDetailActivity"></activity>
+        <activity
+            android:name=".moviedetail.MovieDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".moviewebsite.WebViewActivity"
+            android:theme="@style/WebsiteActivityNoActionBar" />
     </application>
 
 </manifest>
