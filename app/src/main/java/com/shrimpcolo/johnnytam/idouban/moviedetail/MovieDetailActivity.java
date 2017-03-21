@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * 这里不应该使用MVP， 因为Movie数据是从电影列表Item 传入。
  * 但是，为了深入理解MVP，本类还是使用MVP模式
- * MovieDetailActivity  作为 View， MovieDetailPresenter 作为 Presenter
+ * MovieDetailActivity  作为 View， {@link MovieDetailPresenter} 作为 Presenter
  * 目的是 让Activity 不接触到 Movie数据， 界面需要数据的显示 全部都从MovieDetailPresenter中处理
  */
 public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View{
