@@ -70,7 +70,7 @@ public class BooksFragment extends Fragment implements BooksContract.View {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBookAdapter = new BookAdapter(new ArrayList<Book>(0), R.layout.recyclerview_book_item);
+        mBookAdapter = new BookAdapter(new ArrayList<>(0), R.layout.recyclerview_book_item);
     }
 
     @Override

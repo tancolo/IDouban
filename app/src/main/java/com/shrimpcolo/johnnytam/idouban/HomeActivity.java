@@ -40,13 +40,8 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
 
         Log.e(TAG, SUB + " onCreate!");
         //初始化控件
@@ -87,8 +82,8 @@ public class HomeActivity extends AppCompatActivity {
         Log.e(TAG, SUB + " createPresenter, booksFragment = " + booksFragment);
 
         //Create the movies presenter
-        MoviesPresenter moviesPresenter = new MoviesPresenter(DoubanManager.createDoubanService(), moviesFragment);
-        BooksPresenter  booksPresenter = new BooksPresenter(DoubanManager.createDoubanService(), booksFragment);
+        new MoviesPresenter(DoubanManager.createDoubanService(), moviesFragment);
+        new BooksPresenter(DoubanManager.createDoubanService(), booksFragment);
     }
 
     static class DoubanPagerAdapter extends FragmentPagerAdapter {

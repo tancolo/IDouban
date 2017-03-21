@@ -60,7 +60,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
             mMoviesView.setLoadingIndicator(true);
         }
 
-        if(forceUpdate){
+        if(forceUpdate) {
             mIDuobanService.searchHotMovies().enqueue(new Callback<HotMoviesInfo>() {
                 @Override
                 public void onResponse(Call<HotMoviesInfo> call, Response<HotMoviesInfo> response) {
@@ -71,7 +71,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                             + " showLoadingUI: " + showLoadingUI);
 
                     //获取数据成功，Loading UI消失
-                    if(showLoadingUI) {
+                    if (showLoadingUI) {
                         mMoviesView.setLoadingIndicator(false);
                     }
 
@@ -84,7 +84,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                             + Thread.currentThread().getId() + ", Error: " + t.getMessage());
 
                     //获取数据成功，Loading UI消失
-                    if(showLoadingUI) {
+                    if (showLoadingUI) {
                         mMoviesView.setLoadingIndicator(false);
                     }
                     processEmptyTasks();
