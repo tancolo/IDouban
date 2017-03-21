@@ -67,7 +67,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                     Log.d(HomeActivity.TAG, "===> onResponse: Thread.Id = " + Thread.currentThread().getId());
                     List<Movie> moviesList = response.body().getMovies();
                     //debug
-                    Log.e(HomeActivity.TAG, "===> Response, size = " + moviesList.size()
+                    Log.e(HomeActivity.TAG, "===>Search Movies: Response, size = " + moviesList.size()
                             + " showLoadingUI: " + showLoadingUI);
 
                     //获取数据成功，Loading UI消失

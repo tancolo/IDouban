@@ -16,7 +16,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.shrimpcolo.johnnytam.idouban.api.DoubanManager;
+import com.shrimpcolo.johnnytam.idouban.books.BooksContract;
 import com.shrimpcolo.johnnytam.idouban.books.BooksFragment;
+import com.shrimpcolo.johnnytam.idouban.books.BooksPresenter;
 import com.shrimpcolo.johnnytam.idouban.movies.MoviesContract;
 import com.shrimpcolo.johnnytam.idouban.movies.MoviesFragment;
 import com.shrimpcolo.johnnytam.idouban.movies.MoviesPresenter;
@@ -63,24 +65,30 @@ public class HomeActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager){
         DoubanPagerAdapter pagerAdapter = new DoubanPagerAdapter(getSupportFragmentManager());
         MoviesFragment moviesFragment = MoviesFragment.newInstance();
+        BooksFragment booksFragment = BooksFragment.newInstance();
 
         Log.e(TAG, SUB + " setupViewPager, moviesFragment = " + moviesFragment);
+        Log.e(TAG, SUB + " setupViewPager, booksFragment = " + booksFragment);
 
         pagerAdapter.addFragment(moviesFragment
                 , getApplicationContext().getResources().getString(R.string.tab_movies_fragment));
 
-        pagerAdapter.addFragment(new BooksFragment(),
+        pagerAdapter.addFragment(booksFragment,
                 getApplicationContext().getResources().getString(R.string.tab_books_fragment));
+
         viewPager.setAdapter(pagerAdapter);
 
-        createPresenter(moviesFragment);
+        createPresenter(moviesFragment, booksFragment);
 
     }
 
-    private void createPresenter(MoviesContract.View fragmentView){
-        Log.e(TAG, SUB + " createPresenter, fragmentView = " + fragmentView);
+    private void createPresenter(MoviesContract.View moviesFragment, BooksContract.View booksFragment){
+        Log.e(TAG, SUB + " createPresenter, moviesFragment = " + moviesFragment);
+        Log.e(TAG, SUB + " createPresenter, booksFragment = " + booksFragment);
+
         //Create the movies presenter
-        MoviesPresenter mMoviesPresenter = new MoviesPresenter(DoubanManager.createDoubanService(), fragmentView);
+        MoviesPresenter moviesPresenter = new MoviesPresenter(DoubanManager.createDoubanService(), moviesFragment);
+        BooksPresenter  booksPresenter = new BooksPresenter(DoubanManager.createDoubanService(), booksFragment);
     }
 
     static class DoubanPagerAdapter extends FragmentPagerAdapter {

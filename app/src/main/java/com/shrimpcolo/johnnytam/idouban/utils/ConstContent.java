@@ -8,6 +8,8 @@ public final class ConstContent {
 
     public static final String INTENT_EXTRA_MOVIE = "movie"; //MoviesFragment
 
+    public static final String INTENT_EXTRA_BOOK = "book"; //BooksFragment
+
     public static final int TYPE_MOVIE_INFO = 0;//MovieDetailFragment
 
     public static final int TYPE_MOVIE_WEBSITE = 1; //MovieDetailFragment

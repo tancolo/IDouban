@@ -132,7 +132,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 
         final ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.pgb_loading);
 
-        //Log.e(HomeActivity.TAG, "\n\n setLoadingIndicator: active " + active);
+        Log.e(HomeActivity.TAG, TAG + "=> loading indicator: " + active);
 
         if(active) {
             progressBar.setVisibility(View.VISIBLE);

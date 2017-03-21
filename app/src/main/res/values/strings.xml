@@ -14,6 +14,7 @@
     <!--<string name="title_activity_movie_detail">MovieDetailActivity</string>-->
 
     <string name="no_movies">No Movie Data</string>
+    <string name="no_books">No Books Data</string>
     <string name="error_network">Network maybe disable, please check it!</string>
 
     <string name="app_name">IDouban</string>
