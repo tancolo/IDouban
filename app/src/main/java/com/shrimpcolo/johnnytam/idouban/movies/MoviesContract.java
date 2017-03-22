@@ -14,18 +14,28 @@ import java.util.List;
 public interface MoviesContract {
     interface View extends BaseView<Presenter> {
 
-        void showMovies(List<Movie> movies);
+        void showRefreshedMovies(List<Movie> movies);
+
+        void showLoadedMoreMovies(List<Movie> movies);
 
         void showNoMovies();
 
         void showMovieDetailUi(String movieName);//not used
 
-        void setLoadingIndicator(boolean active);
+        void setRefreshedIndicator(boolean active);//indicator of SwipeRefreshLayout
+
+        void setLoadMoreIndicator(boolean active); //indicator of LoadMore Movies
+
+        void showNoLoadedMoreMovies();
+
+        void setMoviesTotal(int total);
     }
 
     interface Presenter extends BasePresenter {
 
-        void loadMovies(boolean forceUpdate);
+        void loadRefreshedMovies(boolean forceUpdate);
+
+        void loadMoreMovies(int movieStartIndex);
 
         void openMovieDetails(Movie clickedMovie);//not used
     }

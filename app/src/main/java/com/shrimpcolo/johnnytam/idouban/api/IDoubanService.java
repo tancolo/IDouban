@@ -14,7 +14,7 @@ public interface IDoubanService {
     String BASE_URL = "https://api.douban.com/v2/";
 
     @GET("movie/in_theaters")
-    Call<HotMoviesInfo> searchHotMovies();
+    Call<HotMoviesInfo> searchHotMovies(@Query("start") int start);
 
     @GET("book/search")
     Call<BooksInfo> searchBooks(@Query("q") String name);
