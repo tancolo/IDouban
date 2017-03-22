@@ -5,13 +5,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,10 +31,13 @@ import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.beans.Movie;
 import com.shrimpcolo.johnnytam.idouban.moviedetail.MovieDetailActivity;
 import com.shrimpcolo.johnnytam.idouban.utils.ConstContent;
+import com.shrimpcolo.johnnytam.idouban.utils.OnLoadMoreListener;
+import com.shrimpcolo.johnnytam.idouban.utils.ScrollChildSwipeRefreshLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogRecord;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -49,6 +56,11 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 
     private MovieAdapter mMovieAdapter;
 
+    //debug
+    private Handler handler;
+
+    private List<Movie> copyMovie = new ArrayList<>();
+
     public MoviesFragment() {
         // Required empty public constructor
     }
@@ -59,51 +71,99 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        //Log.e(HomeActivity.TAG, "MoviesFragment onAttach, presenter: " + mPresenter);
-        if(mPresenter != null) {
-            mPresenter.start();
-        }
-    }
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMovieAdapter = new MovieAdapter(new ArrayList<Movie>(0), R.layout.recyclerview_movies_item);
-        //Log.e(HomeActivity.TAG,  TAG + " onCreate()");
+        Log.e(HomeActivity.TAG,  TAG + " onCreate()");
+        handler = new Handler();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Log.e(HomeActivity.TAG,  TAG + " onCreateView()");
+        Log.e(HomeActivity.TAG,  TAG + " onCreateView()");
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_hot_movies);
         mNoMoviesView = view.findViewById(R.id.ll_no_movies);
+
+        //set recycle view
+        mRecyclerView.setHasFixedSize(true);
+        final GridLayoutManager layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 2);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        //create movie adapter
+        mMovieAdapter = new MovieAdapter(new ArrayList<>(0), mRecyclerView,
+                R.layout.recyclerview_movies_item, R.layout.recyclerview_loading_item);
+
+        mRecyclerView.setAdapter(mMovieAdapter);
+
+        //set movie adapter listener
+        mMovieAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                Log.d(HomeActivity.TAG, " MoviesFragment onLoadMore... ...");
+                mMovieAdapter.mMovies.add(null);
+                getView().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e(HomeActivity.TAG, "==> run() in thread " + Thread.currentThread().getId());
+                        mMovieAdapter.notifyItemInserted(mMovieAdapter.mMovies.size() - 1);
+                    }
+                });
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //remove progress item
+                        mMovieAdapter.mMovies.remove(mMovieAdapter.mMovies.size() - 1);
+                        mMovieAdapter.notifyItemRemoved(mMovieAdapter.mMovies.size());
+
+                        //add Item one by one
+                        mMovieAdapter.mMovies.addAll(copyMovie);
+                        Log.e(HomeActivity.TAG, "===> mMovieAdapter.mMovies.size(): " + mMovieAdapter.mMovies.size());
+
+                        mMovieAdapter.notifyDataSetChanged();
+                        mMovieAdapter.setLoaded();
+
+                    }
+                }, 2000);
+            }
+        });
+
+        // Set up progress indicator
+        final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
+                (ScrollChildSwipeRefreshLayout) view.findViewById(R.id.movie_refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(getActivity(), R.color.colorPrimary),
+                ContextCompat.getColor(getActivity(), R.color.colorAccent),
+                ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)
+        );
+        // Set the scrolling view in the custom SwipeRefreshLayout.
+        swipeRefreshLayout.setScrollUpChild(mRecyclerView);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            Log.e(HomeActivity.TAG, "\n\n onRefresh loadMovies...");
+            mPresenter.loadMovies(true);
+        });
+
+//        mRecyclerView.addOnScrollListener(new EndLessOnScrollListener(layoutManager) {
+//            @Override
+//            public void onLoadMore(int currentPage) {
+//                Log.d(HomeActivity.TAG, " MoviesFragment currentPage: " + currentPage);
+//            }
+//        });
+
         return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        //Log.e(HomeActivity.TAG,  TAG + " onActivityCreated()");
-
-        if (mRecyclerView != null) {
-            mRecyclerView.setHasFixedSize(true);
-            final GridLayoutManager layoutManager = new GridLayoutManager(getActivity().getApplicationContext(), 3);
-            mRecyclerView.setLayoutManager(layoutManager);
-            mRecyclerView.setAdapter(mMovieAdapter);
+        Log.e(HomeActivity.TAG,  TAG + " onViewCreated(): Presenter!  "  + mPresenter);
+        if(mPresenter != null) {
+            mPresenter.start();
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -114,6 +174,8 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
         mRecyclerView.setVisibility(View.VISIBLE);
         mNoMoviesView.setVisibility(View.GONE);
 
+        //copy movie to copyMovie List
+        copyMovie.addAll(movies);
     }
 
     @Override
@@ -130,15 +192,15 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     public void setLoadingIndicator(boolean active) {
         if(getView() == null) return;
 
-        final ProgressBar progressBar = (ProgressBar) getView().findViewById(R.id.pgb_loading);
-
         Log.e(HomeActivity.TAG, TAG + "=> loading indicator: " + active);
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)getView().findViewById(R.id.movie_refresh_layout);
 
-        if(active) {
-            progressBar.setVisibility(View.VISIBLE);
-        }else {
-            progressBar.setVisibility(View.GONE);
-        }
+        // Make sure setRefreshing() is called after the layout is done with everything else.
+        swipeRefreshLayout.post(() -> {
+            Log.e(HomeActivity.TAG, "swipeRefreshLayout run() active: " + active);
+            swipeRefreshLayout.setRefreshing(active);
+        });
+
     }
 
     @Override
@@ -148,16 +210,59 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     }
 
     //Movie's Adapter and view holder
-    static class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
+    static class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        private final int VIEW_TYPE_ITEM = 0;
+        private final int VIEW_TYPE_LOADING = 1;
+
+        private RecyclerView mRecyclerView;
+        private OnLoadMoreListener mOnLoadMoreListener;
+        private boolean isLoading;
+        private int visibleThreshold = 5;
+        private int lastVisibleItem;
+        private int totalItemCount;
 
         private List<Movie> mMovies;
 
         @LayoutRes
-        private int layoutResId;
+        private int layoutItemViewResId;
 
-        public MovieAdapter(@NonNull List<Movie> movies, @LayoutRes int layoutResId) {
+        @LayoutRes
+        private int layoutLoadingResId;
+
+        public MovieAdapter(@NonNull List<Movie> movies, RecyclerView recyclerView,
+                            @LayoutRes int layoutItemViewId, @LayoutRes int layoutLoadingResId) {
             setList(movies);
-            this.layoutResId = layoutResId;
+            this.layoutItemViewResId = layoutItemViewId;
+            this.layoutLoadingResId = layoutLoadingResId;
+            this.mRecyclerView = recyclerView;
+
+            final LinearLayoutManager gridLayoutManager = (GridLayoutManager) mRecyclerView.getLayoutManager();
+
+            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                    totalItemCount = gridLayoutManager.getItemCount();
+                    lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
+
+                    if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                        if (mOnLoadMoreListener != null) {
+                            mOnLoadMoreListener.onLoadMore();
+                        }
+                        isLoading = true;
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return mMovies.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        }
+
+        public void setOnLoadMoreListener(OnLoadMoreListener loadMoreListener){
+            this.mOnLoadMoreListener = loadMoreListener;
         }
 
         private void setList(List<Movie> movies) {
@@ -165,26 +270,44 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
         }
 
         @Override
-        public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
-            return new MovieViewHolder(itemView);
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            RecyclerView.ViewHolder viewHolder;
+
+            if(VIEW_TYPE_ITEM == viewType) {
+                View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutItemViewResId, parent, false);
+                viewHolder = new MovieViewHolder(itemView);
+            }else {
+                View loadingView = LayoutInflater.from(parent.getContext()).inflate(layoutLoadingResId, parent, false);
+                viewHolder = new LoadingViewHolder(loadingView);
+            }
+
+            return viewHolder;
         }
 
         @Override
-        public void onBindViewHolder(MovieViewHolder holder, int position) {
-            if (holder == null) return;
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if(holder == null) return;
+            if(holder instanceof MovieViewHolder) {
+                ((MovieViewHolder)holder).updateMovie(mMovies.get(position));
 
-            holder.updateMovie(mMovies.get(position));
+            }else if(holder instanceof LoadingViewHolder) {
+                ((LoadingViewHolder)holder).updateLoading();
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mMovies.size();
+            return mMovies == null ? 0 : mMovies.size();
         }
 
         public void replaceData(List<Movie> movies) {
             setList(movies);
             notifyDataSetChanged();
+        }
+
+        public void setLoaded() {
+            isLoading = false;
         }
     }
 
@@ -258,4 +381,42 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
         }
     }
 
+    static class LoadingViewHolder extends RecyclerView.ViewHolder {
+
+        ProgressBar progressBar;
+
+        LoadingViewHolder(View itemView) {
+            super(itemView);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.loading_progress_bar);
+        }
+
+        void updateLoading(){
+            progressBar.setIndeterminate(true);
+        }
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e(HomeActivity.TAG, "onPause()!!!");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e(HomeActivity.TAG, "onStop()!!!");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.e(HomeActivity.TAG, "onDestroyView()!!!");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e(HomeActivity.TAG, "onDestroy()!!!");
+    }
 }

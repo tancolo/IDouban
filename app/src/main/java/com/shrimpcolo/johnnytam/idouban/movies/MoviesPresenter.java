@@ -51,6 +51,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     @Override
     public void start() {
+        Log.e(HomeActivity.TAG, TAG + ", start() ");
         loadMovies(false);
     }
 
