@@ -67,8 +67,8 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     public void onScrolled(final RecyclerView view, int dx, int dy) {
 
         ////when dy=0---->list is clear totalItemCount == 0 or init load  previousTotalItemCount=0
+//        Log.e(mTag, "onScrolled-------dy: " + dy);
         if (dy <= 0) return;
-//        Log.i(mTag, "onScrolled-------dy:" + dy);
 
         RecyclerView.Adapter adapter = view.getAdapter();
         int totalItemCount = adapter.getItemCount();
@@ -82,19 +82,23 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
             if (isUseFooterView()) {
                 if (!isFooterView(adapter)) {
 
-                    if (totalItemCount < previousTotalItemCount) {//swiprefresh reload result to change listsize ,reset pageindex
+                    if (totalItemCount < previousTotalItemCount) {//swipe refresh reload result to change list size ,reset page index
                         this.currentPage = this.startingPageIndex;
 //                            Log.i(mTag, "****totalItemCount:" + totalItemCount + ",previousTotalItemCount:" + previousTotalItemCount + ",currentpage=startingPageIndex");
-                    } else if (totalItemCount == previousTotalItemCount) {//if load failure or load empty data , we rollback  pageindex
+                    } else if (totalItemCount == previousTotalItemCount) {//if load failure or load empty data , we rollback  page index
                         currentPage = currentPage == startingPageIndex ? startingPageIndex : --currentPage;
 //                            Log.i(mTag, "!!!!currentpage:" + currentPage);
                     }
 
+                    //if(loading && (totalItemCount > previousTotalItemCount))
                     loading = false;
                 }
             } else {
                 if (totalItemCount > previousTotalItemCount) loading = false;
             }
+
+            Log.i(mTag, "loading : " + loading + " page index:" + currentPage + ",totalItemsCount:" + totalItemCount
+            + ", previousTotalItemCount: " + previousTotalItemCount);
 
             if (!loading) {
 
@@ -107,12 +111,10 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
                 currentPage++;
                 onLoadMore(currentPage, totalItemCount);
                 loading = true;
-                Log.i(mTag, "request pageindex:" + currentPage + ",totalItemsCount:" + totalItemCount);
-
+//                Log.i(mTag, "request page index:" + currentPage + ",totalItemsCount:" + totalItemCount);
             }
         }
     }
-
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
