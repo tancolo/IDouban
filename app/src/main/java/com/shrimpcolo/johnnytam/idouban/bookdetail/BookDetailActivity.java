@@ -23,7 +23,7 @@ import java.util.List;
  * 这里没有使用MVP， 因为Book数据是从书籍列表Item 传入。
  * 目的是 参考{@link MovieDetailActivity}，对直接在 View 中操作数据 和 MVP中 P层操作数据的区别
  * 如果传入的是 书籍的某个Key (豆瓣自己定义的 book id)， 最好考虑使用MVP，P层请求网络数据，完成后
- * 再使用View.showBooks 来间接更新 View 中数据
+ * 再使用View.showRefreshedBooks 来间接更新 View 中数据
  */
 public class BookDetailActivity extends AppCompatActivity {
 

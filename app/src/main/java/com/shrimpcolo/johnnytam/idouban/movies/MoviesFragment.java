@@ -16,7 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,6 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.MSG_LOADMORE_DATA;
+import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.MSG_LOADMORE_UI_ADD;
+import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.MSG_LOADMORE_UI_DELETE;
+import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.VIEW_TYPE_ITEM;
+import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.VIEW_TYPE_LOADING;
 
 /**
  * 展示一系列电影{@link Movie} 页面， 使用RecycleView 展示
@@ -47,10 +51,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class MoviesFragment extends Fragment implements MoviesContract.View{
 
     private static final String TAG = MoviesFragment.class.getSimpleName();
-
-    private static final int MSG_LOADMORE_UI_ADD = 0x1000;
-    private static final int MSG_LOADMORE_UI_DELETE = 0x1001;
-    private static final int MSG_LOADMORE_MOVIES = 0x1002;
 
     private MoviesContract.Presenter mPresenter;
 
@@ -75,7 +75,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
                     mMovieAdapter.mMovies.add(null);
                     mMovieAdapter.notifyItemInserted(mMovieAdapter.mMovies.size() - 1);
 
-                    Message msgLoadMore = mHandler.obtainMessage(MSG_LOADMORE_MOVIES, msg.arg1, -1);
+                    Message msgLoadMore = mHandler.obtainMessage(MSG_LOADMORE_DATA, msg.arg1, -1);
                     mHandler.sendMessage(msgLoadMore);
                     break;
 
@@ -85,8 +85,8 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
                     mMovieAdapter.notifyItemRemoved(mMovieAdapter.mMovies.size());
                     break;
 
-                case MSG_LOADMORE_MOVIES:
-                    //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_MOVIES totalItem: " + msg.arg1);
+                case MSG_LOADMORE_DATA:
+                    //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_DATA totalItem: " + msg.arg1);
                     mPresenter.loadMoreMovies(msg.arg1);
                     break;
                 default:
@@ -193,9 +193,9 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
         mAdapterMoviesData.addAll(movies);
         mMovieAdapter.replaceData(mAdapterMoviesData);
 
-        Log.e(HomeActivity.TAG,  TAG + " showRefreshedMovies: \n" +
-                "mAdapterMoviesData.size() =  " + mAdapterMoviesData.size()
-        + ", getMoviesList.size = " + movies.size() + ", adapter's movies.size = " + mMovieAdapter.mMovies.size());
+//        Log.e(HomeActivity.TAG,  TAG + " showRefreshedMovies: \n" +
+//                "mAdapterMoviesData.size() =  " + mAdapterMoviesData.size()
+//        + ", getMoviesList.size = " + movies.size() + ", adapter's movies.size = " + mMovieAdapter.mMovies.size());
 
         mRecyclerView.setVisibility(View.VISIBLE);
         mNoMoviesView.setVisibility(View.GONE);
@@ -209,9 +209,9 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 
     @Override
     public void showLoadedMoreMovies(List<Movie> movies) {
-        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 111 : \n" +
-                "mAdapterMoviesData.size() =  " + mAdapterMoviesData.size()
-                + ", LoadMoreList.size = " + movies.size() + ", adapter's movies.size = " + mMovieAdapter.mMovies.size());
+//        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 111 : \n" +
+//                "mAdapterMoviesData.size() =  " + mAdapterMoviesData.size()
+//                + ", LoadMoreList.size = " + movies.size() + ", adapter's movies.size = " + mMovieAdapter.mMovies.size());
 
         mMovieAdapter.mMovies.remove(mMovieAdapter.mMovies.size() - 1);
         mMovieAdapter.notifyItemRemoved(mMovieAdapter.mMovies.size());
@@ -219,9 +219,9 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
         mAdapterMoviesData.addAll(movies);
         mMovieAdapter.replaceData(mAdapterMoviesData);
 
-        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 222 : \n" +
-                "mAdapterMoviesData.size() =  " + mAdapterMoviesData.size()
-                + ", LoadMoreList.size = " + movies.size() + ", adapter's movies.size = " + mMovieAdapter.mMovies.size());
+//        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 222 : \n" +
+//                "mAdapterMoviesData.size() =  " + mAdapterMoviesData.size()
+//                + ", LoadMoreList.size = " + movies.size() + ", adapter's movies.size = " + mMovieAdapter.mMovies.size());
     }
 
     @Override
@@ -269,13 +269,10 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     //Movie's Adapter and view holder
     static class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private final int VIEW_TYPE_ITEM = 0;
-        private final int VIEW_TYPE_LOADING = 1;
         private List<Movie> mMovies;
 
         @LayoutRes
         private int layoutItemViewResId;
-
         @LayoutRes
         private int layoutLoadingResId;
 

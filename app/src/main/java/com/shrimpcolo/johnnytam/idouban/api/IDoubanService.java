@@ -17,5 +17,5 @@ public interface IDoubanService {
     Call<HotMoviesInfo> searchHotMovies(@Query("start") int start);
 
     @GET("book/search")
-    Call<BooksInfo> searchBooks(@Query("q") String name);
+    Call<BooksInfo> searchBooks(@Query("q") String name, @Query("start") int start);
 }

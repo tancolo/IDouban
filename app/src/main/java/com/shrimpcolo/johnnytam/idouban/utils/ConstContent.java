@@ -19,4 +19,14 @@ public final class ConstContent {
     public static final String INTENT_EXTRA_FRAGMENT_TYPE = "type"; //
 
     public static final String INTENT_EXTRA_WEBSITE_URL =  "website";
+
+    public static final int MSG_LOADMORE_UI_ADD = 0x1000;
+
+    public static final int MSG_LOADMORE_UI_DELETE = 0x1001;
+
+    public static final int MSG_LOADMORE_DATA = 0x1002;
+
+    public static final int VIEW_TYPE_ITEM = 0;
+
+    public static final int VIEW_TYPE_LOADING = 1;
 }
