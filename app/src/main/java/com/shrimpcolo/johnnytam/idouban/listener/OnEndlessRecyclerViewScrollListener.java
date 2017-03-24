@@ -90,15 +90,15 @@ public abstract class OnEndlessRecyclerViewScrollListener extends RecyclerView.O
 //                            Log.i(mTag, "!!!!currentpage:" + currentPage);
                     }
 
-                    //if(loading && (totalItemCount > previousTotalItemCount))
-                    loading = false;
+                    if(!isLoading())
+                        loading = false;
                 }
             } else {
                 if (totalItemCount > previousTotalItemCount) loading = false;
             }
 
-            Log.i(mTag, "loading : " + loading + " page index:" + currentPage + ",totalItemsCount:" + totalItemCount
-            + ", previousTotalItemCount: " + previousTotalItemCount);
+//            Log.i(mTag, "loading : " + loading + " page index:" + currentPage + ",totalItemsCount:" + totalItemCount
+//            + ", previousTotalItemCount: " + previousTotalItemCount);
 
             if (!loading) {
 
@@ -130,20 +130,26 @@ public abstract class OnEndlessRecyclerViewScrollListener extends RecyclerView.O
     }
 
 
-    public boolean isFooterView(RecyclerView.Adapter padapter) {
+    public boolean isFooterView(RecyclerView.Adapter adapter) {
 
         boolean isFooterView = false;
-        int ptotalItemCount = padapter.getItemCount();
+        int totalItemCount = adapter.getItemCount();
 
-        if (ptotalItemCount > 0) {
+        int lastPosition = -1;
+        int lastViewType = -1;
 
-            int lastPosition = ptotalItemCount - 1;
-            int lastViewType = padapter.getItemViewType(lastPosition);
+        if (totalItemCount > 0) {
 
-            //  check the lastview is footview
+            lastPosition = totalItemCount - 1;
+            lastViewType = adapter.getItemViewType(lastPosition);
+
+            //  check the last view is foot view
             isFooterView = lastViewType == footerViewType;
         }
-//        Log.i(mTag, "isFooterView:" + isFooterView);
+        Log.i(mTag, "===> totalItemCount: " + totalItemCount
+                + ", lastPosition: " + lastPosition
+                + ", lastViewType: " + lastViewType
+                + ", isFooterView:" + isFooterView);
 
         return isFooterView;
     }
@@ -185,6 +191,8 @@ public abstract class OnEndlessRecyclerViewScrollListener extends RecyclerView.O
 
     // Defines the process for actually loading more data based on page
     public abstract void onLoadMore(int page, int totalItemsCount);
+
+    public abstract boolean isLoading();//Loading & Loaded
 
     //set visibleThreshold   default: 5
     public int getVisibleThreshold() {

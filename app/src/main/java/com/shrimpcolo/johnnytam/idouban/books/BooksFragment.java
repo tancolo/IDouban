@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -43,8 +41,6 @@ import java.util.List;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_DATA;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_ADD;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_DELETE;
-import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder.BuilderItemViewHolder;
-import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder.BuilderLoadingViewHolder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,12 +60,16 @@ public class BooksFragment extends Fragment implements BooksContract.View {
 
     private BooksHandle mHandler;
 
+    private boolean mIsLoading = false;
+
     class BooksHandle extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_LOADMORE_UI_ADD:
                     //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_ADD totalItem: " + msg.arg1);
+
+                    mIsLoading = true;//Loading UI显示，在没有完成时候，不能再次去请求Load More
                     mBookAdapter.getData().add(null);
                     mBookAdapter.notifyItemInserted(mBookAdapter.getData().size() - 1);
 
@@ -81,6 +81,9 @@ public class BooksFragment extends Fragment implements BooksContract.View {
                     //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_DELETE : ");
                     mBookAdapter.getData().remove(mBookAdapter.getData().size() - 1);
                     mBookAdapter.notifyItemRemoved(mBookAdapter.getData().size());
+
+                    //Loading UI要从mMovieAdapter最后一行消失了，说明 Loading 完成或者是没有更多数据了
+                    mIsLoading = false;
                     break;
 
                 case MSG_LOADMORE_DATA:
@@ -155,10 +158,15 @@ public class BooksFragment extends Fragment implements BooksContract.View {
 
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                Log.d(HomeActivity.TAG, " CallBack onLoadMore => page: " + page + ", books item count is " + totalItemsCount);
+                Log.d(HomeActivity.TAG, "Books CallBack onLoadMore => page: " + page + ", books item count is " + totalItemsCount);
 
                 final Message msg = mHandler.obtainMessage(MSG_LOADMORE_UI_ADD, totalItemsCount, -1);
                 msg.sendToTarget();
+            }
+
+            @Override
+            public boolean isLoading() {
+                return mIsLoading;
             }
         });
 
@@ -205,6 +213,8 @@ public class BooksFragment extends Fragment implements BooksContract.View {
 
         mAdapterBooksData.addAll(books);
         mBookAdapter.replaceData(mAdapterBooksData);
+
+        mIsLoading = false;//通知OnEndlessRecycleViewScrollListener 可以再次加载数据(如果有的话)
 
 //        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 222 : \n" +
 //                "mAdapterMoviesData.size() =  " + mAdapterBooksData.size()

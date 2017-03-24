@@ -1,5 +1,6 @@
 package com.shrimpcolo.johnnytam.idouban.movies;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -62,14 +63,19 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 
     private List<Movie> mAdapterMoviesData;
 
+    private boolean mIsLoading = false;
+
     private int mMovieTotal;
 
+    @SuppressLint("HandlerLeak")
     class MoviesHandle extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_LOADMORE_UI_ADD:
                     Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_ADD totalItem: " + msg.arg1);
+
+                    mIsLoading = true;//Loading UI显示，在没有完成时候，不能再次去请求Load More
                     mMovieAdapter.getData().add(null);
                     mMovieAdapter.notifyItemInserted(mMovieAdapter.getData().size() - 1);
 
@@ -81,6 +87,9 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
                     Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_DELETE : ");
                     mMovieAdapter.getData().remove(mMovieAdapter.getData().size() - 1);
                     mMovieAdapter.notifyItemRemoved(mMovieAdapter.getData().size());
+
+                    //Loading UI要从mMovieAdapter最后一行消失了，说明 Loading 完成或者是没有更多数据了
+                    mIsLoading = false;
                     break;
 
                 case MSG_LOADMORE_DATA:
@@ -157,16 +166,22 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
         mRecyclerView.addOnScrollListener(new OnEndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public int getFooterViewType(int defaultNoFooterViewType) {
-                return 1;// -1: 不存在FooterView， 其他数字表示存在FooterView
+                return AppConstants.VIEW_TYPE_LOADING;// -1: 不存在FooterView，
             }
 
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                Log.d(HomeActivity.TAG, " CallBack onLoadMore => page: " + page + ", totalItemsCount = " + totalItemsCount);
+                Log.d(HomeActivity.TAG, "Movies CallBack onLoadMore => page: " + page + ", movies item count is " + totalItemsCount);
 
                 final Message msg = mHandler.obtainMessage(MSG_LOADMORE_UI_ADD, totalItemsCount, -1);
                 msg.sendToTarget();
             }
+
+            @Override
+            public boolean isLoading() {
+                return mIsLoading;
+            }
+
         });
 
         return view;
@@ -223,6 +238,8 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 
         mAdapterMoviesData.addAll(movies);
         mMovieAdapter.replaceData(mAdapterMoviesData);
+
+        mIsLoading = false;//通知OnEndlessRecycleViewScrollListener 可以再次加载数据(如果有的话)
 
         Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 222 : \n" +
                 "mAdapterMoviesData.size() =  " + mAdapterMoviesData.size()
