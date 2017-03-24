@@ -75,13 +75,13 @@ public class BooksFragment extends Fragment implements BooksContract.View {
                     break;
 
                 case MSG_LOADMORE_UI_DELETE:
-                    Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_DELETE : ");
+                    //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_DELETE : ");
                     mBookAdapter.mBooks.remove(mBookAdapter.mBooks.size() - 1);
                     mBookAdapter.notifyItemRemoved(mBookAdapter.mBooks.size());
                     break;
 
                 case MSG_LOADMORE_DATA:
-                    Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_DATA load start index: " + msg.arg1);
+                    //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_DATA load start index: " + msg.arg1);
                     mPresenter.loadMoreBooks(msg.arg1);
                     break;
                 default:

@@ -28,6 +28,8 @@ import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewAdapter;
+import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder;
 import com.shrimpcolo.johnnytam.idouban.entity.Movie;
 import com.shrimpcolo.johnnytam.idouban.moviedetail.MovieDetailActivity;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
@@ -44,6 +46,8 @@ import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_U
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_DELETE;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.VIEW_TYPE_ITEM;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.VIEW_TYPE_LOADING;
+import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder.BuilderItemViewHolder;
+import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder.BuilderLoadingViewHolder;
 
 /**
  * 展示一系列电影{@link Movie} 页面， 使用RecycleView 展示
@@ -58,7 +62,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 
     private View mNoMoviesView;
 
-    private MovieAdapter mMovieAdapter;
+    private BaseRecycleViewAdapter mMovieAdapter;
 
     private MoviesHandle mHandler;
 
@@ -71,22 +75,22 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_LOADMORE_UI_ADD:
-                    //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_ADD totalItem: " + msg.arg1);
-                    mMovieAdapter.mMovies.add(null);
-                    mMovieAdapter.notifyItemInserted(mMovieAdapter.mMovies.size() - 1);
+                    Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_ADD totalItem: " + msg.arg1);
+                    mMovieAdapter.getData().add(null);
+                    mMovieAdapter.notifyItemInserted(mMovieAdapter.getData().size() - 1);
 
                     Message msgLoadMore = mHandler.obtainMessage(MSG_LOADMORE_DATA, msg.arg1, -1);
                     mHandler.sendMessage(msgLoadMore);
                     break;
 
                 case MSG_LOADMORE_UI_DELETE:
-                    //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_DELETE : ");
-                    mMovieAdapter.mMovies.remove(mMovieAdapter.mMovies.size() - 1);
-                    mMovieAdapter.notifyItemRemoved(mMovieAdapter.mMovies.size());
+                    Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_DELETE : ");
+                    mMovieAdapter.getData().remove(mMovieAdapter.getData().size() - 1);
+                    mMovieAdapter.notifyItemRemoved(mMovieAdapter.getData().size());
                     break;
 
                 case MSG_LOADMORE_DATA:
-                    //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_DATA totalItem: " + msg.arg1);
+                    Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_DATA totalItem: " + msg.arg1);
                     mPresenter.loadMoreMovies(msg.arg1);
                     break;
                 default:
@@ -128,8 +132,15 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
         mRecyclerView.setLayoutManager(layoutManager);
 
         //create movie adapter
-        mMovieAdapter = new MovieAdapter(new ArrayList<>(0),
-                R.layout.recyclerview_movies_item, R.layout.recyclerview_loading_item);
+        BuilderItemViewHolder builderItemViewHolder = itemView -> new MovieViewHolder(itemView);
+        BuilderLoadingViewHolder builderLoadingViewHolder = loadingItemView -> new LoadingViewHolder(loadingItemView);
+
+        mMovieAdapter = new BaseRecycleViewAdapter<>(new ArrayList<>(0),
+                R.layout.recyclerview_movies_item,
+                R.layout.recyclerview_loading_item,
+                builderItemViewHolder,
+                builderLoadingViewHolder
+        );
 
         mRecyclerView.setAdapter(mMovieAdapter);
 
@@ -209,19 +220,19 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 
     @Override
     public void showLoadedMoreMovies(List<Movie> movies) {
-//        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 111 : \n" +
-//                "mAdapterMoviesData.size() =  " + mAdapterMoviesData.size()
-//                + ", LoadMoreList.size = " + movies.size() + ", adapter's movies.size = " + mMovieAdapter.mMovies.size());
+        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 111 : \n" +
+                "mAdapterMoviesData.size() =  " + mAdapterMoviesData.size()
+                + ", LoadMoreList.size = " + movies.size() + ", adapter's movies.size = " + mMovieAdapter.getData().size());
 
-        mMovieAdapter.mMovies.remove(mMovieAdapter.mMovies.size() - 1);
-        mMovieAdapter.notifyItemRemoved(mMovieAdapter.mMovies.size());
+        mMovieAdapter.getData().remove(mMovieAdapter.getData().size() - 1);
+        mMovieAdapter.notifyItemRemoved(mMovieAdapter.getData().size());
 
         mAdapterMoviesData.addAll(movies);
         mMovieAdapter.replaceData(mAdapterMoviesData);
 
-//        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 222 : \n" +
-//                "mAdapterMoviesData.size() =  " + mAdapterMoviesData.size()
-//                + ", LoadMoreList.size = " + movies.size() + ", adapter's movies.size = " + mMovieAdapter.mMovies.size());
+        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 222 : \n" +
+                "mAdapterMoviesData.size() =  " + mAdapterMoviesData.size()
+                + ", LoadMoreList.size = " + movies.size() + ", adapter's movies.size = " + mMovieAdapter.getData().size());
     }
 
     @Override
@@ -267,71 +278,71 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
     }
 
     //Movie's Adapter and view holder
-    static class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+//    static class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+//
+//        private List<Movie> mMovies;
+//
+//        @LayoutRes
+//        private int layoutItemViewResId;
+//        @LayoutRes
+//        private int layoutLoadingResId;
+//
+//        public MovieAdapter(@NonNull List<Movie> movies,
+//                            @LayoutRes int layoutItemViewId, @LayoutRes int layoutLoadingResId) {
+//            setList(movies);
+//            this.layoutItemViewResId = layoutItemViewId;
+//            this.layoutLoadingResId = layoutLoadingResId;
+//        }
+//
+//        @Override
+//        public int getItemViewType(int position) {
+//            return mMovies.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+//        }
+//
+//        private void setList(List<Movie> movies) {
+//            mMovies =  checkNotNull(movies);
+//        }
+//
+//        @Override
+//        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//
+//            RecyclerView.ViewHolder viewHolder;
+//
+//            if(VIEW_TYPE_ITEM == viewType) {
+//                View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutItemViewResId, parent, false);
+//                viewHolder = new MovieViewHolder(itemView);
+//            }else {
+//                View loadingView = LayoutInflater.from(parent.getContext()).inflate(layoutLoadingResId, parent, false);
+//                viewHolder = new LoadingViewHolder(loadingView);
+//            }
+//
+//            return viewHolder;
+//        }
+//
+//        @Override
+//        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+//            if(holder == null) return;
+//            if(holder instanceof MovieViewHolder) {
+//                ((MovieViewHolder)holder).updateMovie(mMovies.get(position));
+//
+//            }else if(holder instanceof LoadingViewHolder) {
+//                ((LoadingViewHolder)holder).updateLoading();
+//            }
+//        }
+//
+//        @Override
+//        public int getItemCount() {
+//            return mMovies == null ? 0 : mMovies.size();
+//        }
+//
+//        public void replaceData(List<Movie> movies) {
+//            setList(movies);
+//            notifyDataSetChanged();
+//        }
+//
+//    }
 
-        private List<Movie> mMovies;
-
-        @LayoutRes
-        private int layoutItemViewResId;
-        @LayoutRes
-        private int layoutLoadingResId;
-
-        public MovieAdapter(@NonNull List<Movie> movies,
-                            @LayoutRes int layoutItemViewId, @LayoutRes int layoutLoadingResId) {
-            setList(movies);
-            this.layoutItemViewResId = layoutItemViewId;
-            this.layoutLoadingResId = layoutLoadingResId;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return mMovies.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
-        }
-
-        private void setList(List<Movie> movies) {
-            mMovies =  checkNotNull(movies);
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            RecyclerView.ViewHolder viewHolder;
-
-            if(VIEW_TYPE_ITEM == viewType) {
-                View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutItemViewResId, parent, false);
-                viewHolder = new MovieViewHolder(itemView);
-            }else {
-                View loadingView = LayoutInflater.from(parent.getContext()).inflate(layoutLoadingResId, parent, false);
-                viewHolder = new LoadingViewHolder(loadingView);
-            }
-
-            return viewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if(holder == null) return;
-            if(holder instanceof MovieViewHolder) {
-                ((MovieViewHolder)holder).updateMovie(mMovies.get(position));
-
-            }else if(holder instanceof LoadingViewHolder) {
-                ((LoadingViewHolder)holder).updateLoading();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mMovies == null ? 0 : mMovies.size();
-        }
-
-        public void replaceData(List<Movie> movies) {
-            setList(movies);
-            notifyDataSetChanged();
-        }
-
-    }
-
-    static class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class MovieViewHolder extends BaseRecycleViewHolder<Movie> implements View.OnClickListener {
 
         ImageView mMovieImage;
 
@@ -340,8 +351,6 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
         RatingBar mMovieStars;
 
         TextView mMovieRatingAverage;
-
-        Movie movie;
 
         public MovieViewHolder(View itemView) {
             super(itemView);
@@ -354,11 +363,10 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
             itemView.setOnClickListener(this);
         }
 
-        public void updateMovie(Movie movie) {
-            if (movie == null) return;
-            this.movie = movie;
-
+        @Override
+        protected void onBindItem(Movie movie) {
             Context context = itemView.getContext();
+            if(movie == null || context == null) return;
 
             Picasso.with(context)
                     .load(movie.getImages().getLarge())
@@ -376,20 +384,19 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
                 mMovieStars.setStepSize(0.5f);
                 mMovieStars.setRating((float) (movie.getRating().getAverage() / 2));
             }
+
         }
 
         @Override
         public void onClick(View v) {
             Log.e(HomeActivity.TAG, "==> onClick....Item");
-
-            if (movie == null) return;
-            if (itemView == null) return;
+            if (itemContent == null || itemView == null) return;
 
             Context context = itemView.getContext();
             if (context == null) return;
 
             Intent intent = new Intent(context, MovieDetailActivity.class);
-            intent.putExtra(AppConstants.INTENT_EXTRA_MOVIE, movie);
+            intent.putExtra(AppConstants.INTENT_EXTRA_MOVIE, itemContent);//itemContent means Movie object
 
             if (context instanceof Activity) {
                 Activity activity = (Activity) context;
@@ -401,7 +408,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
         }
     }
 
-    static class LoadingViewHolder extends RecyclerView.ViewHolder {
+    static class LoadingViewHolder extends BaseRecycleViewHolder<Movie> {
 
         ProgressBar progressBar;
 
@@ -410,10 +417,11 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
             progressBar = (ProgressBar) itemView.findViewById(R.id.loading_progress_bar);
         }
 
-        void updateLoading(){
-            progressBar.setIndeterminate(true);
+        @Override
+        protected void onBindItem(Movie movie) {
+            if(movie == null)
+                progressBar.setIndeterminate(true);
         }
-
     }
 
     @Override
