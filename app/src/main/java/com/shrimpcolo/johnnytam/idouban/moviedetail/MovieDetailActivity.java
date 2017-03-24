@@ -5,19 +5,16 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.base.BaseActivity;
+import com.shrimpcolo.johnnytam.idouban.base.BasePagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.entity.Movie;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * MovieDetailActivity  作为 View， {@link MovieDetailPresenter} 作为 Presenter
  * 目的是 让Activity 不接触到 Movie数据， 界面需要数据的显示 全部都从MovieDetailPresenter中处理
  */
-public class MovieDetailActivity extends AppCompatActivity implements MovieDetailContract.View{
+public class MovieDetailActivity extends BaseActivity implements MovieDetailContract.View{
 
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
 
@@ -39,14 +36,26 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movie_detail);
+        //do others things
+    }
 
+    @Override
+    protected void initVariables() {//not implement
+    }
+
+    @Override
+    protected void initViews(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_movie_detail);
         new MovieDetailPresenter((Movie) getIntent().getSerializableExtra(AppConstants.INTENT_EXTRA_MOVIE), this);
 
         //setup view pager
         ViewPager viewPager = (ViewPager) findViewById(R.id.movie_viewpager);
         setupViewPager(viewPager);
 
+        initTabLayout(viewPager);
+    }
+
+    private void initTabLayout(ViewPager viewPager){
         TabLayout tabLayout = (TabLayout) findViewById(R.id.movie_sliding_tabs);
         if (tabLayout != null) {
             tabLayout.addTab(tabLayout.newTab());
@@ -59,7 +68,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
     protected void onStart() {
         super.onStart();
         mPresenter.start();
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -110,13 +118,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         mPresenter = checkNotNull(presenter);
     }
 
-
-
-    //For MoviePageAdapter
-    static class MovieDetailPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFragmentTitles = new ArrayList<>();
-
+    //For MovieDetailFragment
+    static class MovieDetailPagerAdapter extends BasePagerAdapter {
         public MovieDetailPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -124,21 +127,6 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         public void addFragment(Fragment fragment, String title) {
             mFragments.add(fragment);
             mFragmentTitles.add(title);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
         }
     }
 

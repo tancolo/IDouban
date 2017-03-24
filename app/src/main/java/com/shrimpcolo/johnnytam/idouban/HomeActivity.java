@@ -6,14 +6,14 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.shrimpcolo.johnnytam.idouban.base.BaseActivity;
+import com.shrimpcolo.johnnytam.idouban.base.BasePagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.mobileapi.DoubanManager;
 import com.shrimpcolo.johnnytam.idouban.books.BooksContract;
 import com.shrimpcolo.johnnytam.idouban.books.BooksFragment;
@@ -22,10 +22,7 @@ import com.shrimpcolo.johnnytam.idouban.movies.MoviesContract;
 import com.shrimpcolo.johnnytam.idouban.movies.MoviesFragment;
 import com.shrimpcolo.johnnytam.idouban.movies.MoviesPresenter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
     public static final String TAG = "COLO";
     private static final String SUB = HomeActivity.class.getSimpleName();
 
@@ -34,30 +31,47 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e(TAG, SUB + " onCreated !");
+    }
+
+    @Override
+    protected void initVariables() {
+        //not implement
+    }
+
+    @Override
+    protected void initViews(Bundle savedInstanceState) {
         setContentView(R.layout.activity_home);
+
+        initFAB();
+        //init view pager
+        mViewPager = (ViewPager) findViewById(R.id.douban_view_pager);
+        setupViewPager(mViewPager);
+
+        initTabLayout();
+    }
+
+    private void initFAB () {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
+    }
 
-        Log.e(TAG, SUB + " onCreate!");
-        //初始化控件
-        mViewPager = (ViewPager) findViewById(R.id.douban_view_pager);
-        setupViewPager(mViewPager);
-
+    private void initTabLayout() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.douban_sliding_tabs);
         if(tabLayout != null) {
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.addTab(tabLayout.newTab());
             tabLayout.setupWithViewPager(mViewPager);
         }
-
     }
 
+
     private void setupViewPager(ViewPager viewPager){
-        DoubanPagerAdapter pagerAdapter = new DoubanPagerAdapter(getSupportFragmentManager());
+        HomePagerAdapter pagerAdapter = new HomePagerAdapter(getSupportFragmentManager());
         MoviesFragment moviesFragment = MoviesFragment.newInstance();
         BooksFragment booksFragment = BooksFragment.newInstance();
 
@@ -84,33 +98,17 @@ public class HomeActivity extends AppCompatActivity {
         new BooksPresenter(DoubanManager.createDoubanService(), booksFragment);
     }
 
-    static class DoubanPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFrgmentTitles = new ArrayList<>();
+    static class HomePagerAdapter extends BasePagerAdapter {
 
-        public DoubanPagerAdapter(FragmentManager fm) {
+        public HomePagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         public void addFragment(Fragment fragment, String title) {
             mFragments.add(fragment);
-            mFrgmentTitles.add(title);
+            mFragmentTitles.add(title);
         }
 
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFrgmentTitles.get(position);
-        }
     }
 
     @Override
