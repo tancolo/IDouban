@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.base.BaseActivity;
-import com.shrimpcolo.johnnytam.idouban.base.BasePagerAdapter;
+import com.shrimpcolo.johnnytam.idouban.base.BaseViewPagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.entity.Movie;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
 import com.squareup.picasso.Picasso;
@@ -119,7 +119,7 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailCont
     }
 
     //For MovieDetailFragment
-    static class MovieDetailPagerAdapter extends BasePagerAdapter {
+    static class MovieDetailPagerAdapter extends BaseViewPagerAdapter {
         public MovieDetailPagerAdapter(FragmentManager fm) {
             super(fm);
         }

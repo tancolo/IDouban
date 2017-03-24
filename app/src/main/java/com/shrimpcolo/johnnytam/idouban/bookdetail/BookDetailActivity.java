@@ -10,7 +10,7 @@ import android.widget.ImageView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.base.BaseActivity;
-import com.shrimpcolo.johnnytam.idouban.base.BasePagerAdapter;
+import com.shrimpcolo.johnnytam.idouban.base.BaseViewPagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.entity.Book;
 import com.shrimpcolo.johnnytam.idouban.moviedetail.MovieDetailActivity;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
@@ -84,7 +84,7 @@ public class BookDetailActivity extends BaseActivity {
         viewPager.setAdapter(adapter);
     }
 
-    static class BookDetailPagerAdapter extends BasePagerAdapter {
+    static class BookDetailPagerAdapter extends BaseViewPagerAdapter {
 
         public BookDetailPagerAdapter(FragmentManager fm) {
             super(fm);

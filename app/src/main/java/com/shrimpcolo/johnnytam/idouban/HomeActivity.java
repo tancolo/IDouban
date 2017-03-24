@@ -13,7 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.shrimpcolo.johnnytam.idouban.base.BaseActivity;
-import com.shrimpcolo.johnnytam.idouban.base.BasePagerAdapter;
+import com.shrimpcolo.johnnytam.idouban.base.BaseViewPagerAdapter;
 import com.shrimpcolo.johnnytam.idouban.mobileapi.DoubanManager;
 import com.shrimpcolo.johnnytam.idouban.books.BooksContract;
 import com.shrimpcolo.johnnytam.idouban.books.BooksFragment;
@@ -98,7 +98,7 @@ public class HomeActivity extends BaseActivity {
         new BooksPresenter(DoubanManager.createDoubanService(), booksFragment);
     }
 
-    static class HomePagerAdapter extends BasePagerAdapter {
+    static class HomePagerAdapter extends BaseViewPagerAdapter {
 
         public HomePagerAdapter(FragmentManager fm) {
             super(fm);
