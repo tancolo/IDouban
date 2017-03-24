@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.moviewebsite.WebViewActivity;
-import com.shrimpcolo.johnnytam.idouban.utils.ConstContent;
+import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,8 +30,8 @@ public class MovieDetailFragment extends Fragment implements View.OnClickListene
     public static MovieDetailFragment createInstance(String info, int type) {
         MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ConstContent.INTENT_EXTRA_FRAGMENT_INFO, info);
-        args.putInt(ConstContent.INTENT_EXTRA_FRAGMENT_TYPE, type);//0: 影片信息Tab; 1: 简介Tab
+        args.putString(AppConstants.INTENT_EXTRA_FRAGMENT_INFO, info);
+        args.putInt(AppConstants.INTENT_EXTRA_FRAGMENT_TYPE, type);//0: 影片信息Tab; 1: 简介Tab
         movieDetailFragment.setArguments(args);
 
 //        Log.d(TAG, "\n info: " + info + " type: " + type);
@@ -45,9 +45,9 @@ public class MovieDetailFragment extends Fragment implements View.OnClickListene
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         TextView textInfo = (TextView) view.findViewById(R.id.tvInfo);
-        textInfo.setText(getArguments().getString(ConstContent.INTENT_EXTRA_FRAGMENT_INFO));
+        textInfo.setText(getArguments().getString(AppConstants.INTENT_EXTRA_FRAGMENT_INFO));
 
-        if(ConstContent.TYPE_MOVIE_WEBSITE == getArguments().getInt(ConstContent.INTENT_EXTRA_FRAGMENT_TYPE)) {
+        if(AppConstants.TYPE_MOVIE_WEBSITE == getArguments().getInt(AppConstants.INTENT_EXTRA_FRAGMENT_TYPE)) {
             textInfo.setOnClickListener(this);
             mUrl = textInfo.getText().toString();
         }
@@ -60,7 +60,7 @@ public class MovieDetailFragment extends Fragment implements View.OnClickListene
             case R.id.tvInfo:
                 Log.e(HomeActivity.TAG, "===> website click!!!!");
                 Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra(ConstContent.INTENT_EXTRA_WEBSITE_URL, mUrl);
+                intent.putExtra(AppConstants.INTENT_EXTRA_WEBSITE_URL, mUrl);
                 startActivity(intent);
                 break;
             default:

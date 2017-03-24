@@ -4,7 +4,7 @@ package com.shrimpcolo.johnnytam.idouban.utils;
  * Created by Johnny Tam on 2017/3/21.
  */
 
-public final class ConstContent {
+public final class AppConstants {
 
     public static final String INTENT_EXTRA_MOVIE = "movie"; //MoviesFragment
 

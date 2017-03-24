@@ -30,7 +30,7 @@ import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.beans.Movie;
 import com.shrimpcolo.johnnytam.idouban.moviedetail.MovieDetailActivity;
-import com.shrimpcolo.johnnytam.idouban.utils.ConstContent;
+import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
 import com.shrimpcolo.johnnytam.idouban.utils.EndlessRecyclerViewScrollListener;
 import com.shrimpcolo.johnnytam.idouban.utils.ScrollChildSwipeRefreshLayout;
 import com.squareup.picasso.Picasso;
@@ -39,11 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.MSG_LOADMORE_DATA;
-import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.MSG_LOADMORE_UI_ADD;
-import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.MSG_LOADMORE_UI_DELETE;
-import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.VIEW_TYPE_ITEM;
-import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.VIEW_TYPE_LOADING;
+import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_DATA;
+import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_ADD;
+import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_DELETE;
+import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.VIEW_TYPE_ITEM;
+import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.VIEW_TYPE_LOADING;
 
 /**
  * 展示一系列电影{@link Movie} 页面， 使用RecycleView 展示
@@ -389,7 +389,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
             if (context == null) return;
 
             Intent intent = new Intent(context, MovieDetailActivity.class);
-            intent.putExtra(ConstContent.INTENT_EXTRA_MOVIE, movie);
+            intent.putExtra(AppConstants.INTENT_EXTRA_MOVIE, movie);
 
             if (context instanceof Activity) {
                 Activity activity = (Activity) context;

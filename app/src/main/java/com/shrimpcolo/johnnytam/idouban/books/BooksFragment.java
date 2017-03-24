@@ -30,7 +30,7 @@ import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.beans.Book;
 import com.shrimpcolo.johnnytam.idouban.bookdetail.BookDetailActivity;
-import com.shrimpcolo.johnnytam.idouban.utils.ConstContent;
+import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
 import com.shrimpcolo.johnnytam.idouban.utils.EndlessRecyclerViewScrollListener;
 import com.shrimpcolo.johnnytam.idouban.utils.ScrollChildSwipeRefreshLayout;
 import com.squareup.picasso.Picasso;
@@ -39,9 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.MSG_LOADMORE_DATA;
-import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.MSG_LOADMORE_UI_ADD;
-import static com.shrimpcolo.johnnytam.idouban.utils.ConstContent.MSG_LOADMORE_UI_DELETE;
+import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_DATA;
+import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_ADD;
+import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_DELETE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -253,7 +253,7 @@ public class BooksFragment extends Fragment implements BooksContract.View {
 
         @Override
         public int getItemViewType(int position) {
-            return mBooks.get(position) == null ? ConstContent.VIEW_TYPE_LOADING : ConstContent.VIEW_TYPE_ITEM;
+            return mBooks.get(position) == null ? AppConstants.VIEW_TYPE_LOADING : AppConstants.VIEW_TYPE_ITEM;
         }
 
         private void setList(List<Book> books){
@@ -265,7 +265,7 @@ public class BooksFragment extends Fragment implements BooksContract.View {
 
             RecyclerView.ViewHolder viewHolder;
 
-            if(ConstContent.VIEW_TYPE_ITEM == viewType) {
+            if(AppConstants.VIEW_TYPE_ITEM == viewType) {
                 View itemView = LayoutInflater.from(parent.getContext()).inflate(mLayoutItemViewResId, parent, false);
                 viewHolder = new BookViewHolder(itemView);
             }else {
@@ -365,7 +365,7 @@ public class BooksFragment extends Fragment implements BooksContract.View {
             if (context == null) return;
 
             Intent intent = new Intent(context, BookDetailActivity.class);
-            intent.putExtra(ConstContent.INTENT_EXTRA_BOOK, book);
+            intent.putExtra(AppConstants.INTENT_EXTRA_BOOK, book);
 
             if (context instanceof Activity) {
                 Activity activity = (Activity) context;

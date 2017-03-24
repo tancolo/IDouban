@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.beans.Book;
 import com.shrimpcolo.johnnytam.idouban.moviedetail.MovieDetailActivity;
-import com.shrimpcolo.johnnytam.idouban.utils.ConstContent;
+import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class BookDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_detail);
 
         //get the content from the intent.
-        mBook = (Book) getIntent().getSerializableExtra(ConstContent.INTENT_EXTRA_BOOK);
+        mBook = (Book) getIntent().getSerializableExtra(AppConstants.INTENT_EXTRA_BOOK);
 
         //CollapsingToolbarLayout
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);

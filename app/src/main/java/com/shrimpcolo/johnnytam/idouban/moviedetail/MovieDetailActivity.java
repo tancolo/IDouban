@@ -9,13 +9,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
-import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.beans.Movie;
-import com.shrimpcolo.johnnytam.idouban.utils.ConstContent;
+import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,7 +41,7 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
-        new MovieDetailPresenter((Movie) getIntent().getSerializableExtra(ConstContent.INTENT_EXTRA_MOVIE), this);
+        new MovieDetailPresenter((Movie) getIntent().getSerializableExtra(AppConstants.INTENT_EXTRA_MOVIE), this);
 
         //setup view pager
         ViewPager viewPager = (ViewPager) findViewById(R.id.movie_viewpager);
@@ -75,8 +73,8 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieDetai
 
 //        Log.e(HomeActivity.TAG, "\n\n mMovieInfo = " + mMovieInfo + ", mMovieAlt = " + mMovieAlt);
         MovieDetailPagerAdapter adapter = new MovieDetailPagerAdapter(getSupportFragmentManager());
-        MovieDetailFragment movieInfoFragment = MovieDetailFragment.createInstance(mMovieInfo, ConstContent.TYPE_MOVIE_INFO);
-        MovieDetailFragment movieWebsiteFragment = MovieDetailFragment.createInstance(mMovieAlt, ConstContent.TYPE_MOVIE_WEBSITE);
+        MovieDetailFragment movieInfoFragment = MovieDetailFragment.createInstance(mMovieInfo, AppConstants.TYPE_MOVIE_INFO);
+        MovieDetailFragment movieWebsiteFragment = MovieDetailFragment.createInstance(mMovieAlt, AppConstants.TYPE_MOVIE_WEBSITE);
 
         adapter.addFragment(movieInfoFragment, getString(R.string.movie_info));
         adapter.addFragment(movieWebsiteFragment, getString(R.string.movie_description));

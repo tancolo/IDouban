@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
-import com.shrimpcolo.johnnytam.idouban.utils.ConstContent;
+import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
 
 
 /**
@@ -24,7 +24,7 @@ public class BookDetailFragment extends Fragment {
     public static BookDetailFragment newInstance(String info) {
         Bundle args = new Bundle();
         BookDetailFragment fragment = new BookDetailFragment();
-        args.putString(ConstContent.INTENT_EXTRA_FRAGMENT_INFO, info);
+        args.putString(AppConstants.INTENT_EXTRA_FRAGMENT_INFO, info);
         fragment.setArguments(args);
         return fragment;
     }
@@ -35,7 +35,7 @@ public class BookDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
         TextView tvInfo = (TextView) view.findViewById(R.id.tvInfo);
-        tvInfo.setText(getArguments().getString(ConstContent.INTENT_EXTRA_FRAGMENT_INFO));
+        tvInfo.setText(getArguments().getString(AppConstants.INTENT_EXTRA_FRAGMENT_INFO));
         return view;
     }
 
