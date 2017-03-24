@@ -28,6 +28,8 @@ import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewAdapter;
+import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder;
 import com.shrimpcolo.johnnytam.idouban.entity.Book;
 import com.shrimpcolo.johnnytam.idouban.bookdetail.BookDetailActivity;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
@@ -38,10 +40,11 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_DATA;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_ADD;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_DELETE;
+import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder.BuilderItemViewHolder;
+import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder.BuilderLoadingViewHolder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +58,7 @@ public class BooksFragment extends Fragment implements BooksContract.View {
 
     private View mNoBooksView;
 
-    private BookAdapter mBookAdapter;
+    private BaseRecycleViewAdapter mBookAdapter;
 
     private List<Book> mAdapterBooksData;
 
@@ -67,8 +70,8 @@ public class BooksFragment extends Fragment implements BooksContract.View {
             switch (msg.what) {
                 case MSG_LOADMORE_UI_ADD:
                     //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_ADD totalItem: " + msg.arg1);
-                    mBookAdapter.mBooks.add(null);
-                    mBookAdapter.notifyItemInserted(mBookAdapter.mBooks.size() - 1);
+                    mBookAdapter.getData().add(null);
+                    mBookAdapter.notifyItemInserted(mBookAdapter.getData().size() - 1);
 
                     Message msgLoadMore = mHandler.obtainMessage(MSG_LOADMORE_DATA, msg.arg1, -1);
                     mHandler.sendMessage(msgLoadMore);
@@ -76,8 +79,8 @@ public class BooksFragment extends Fragment implements BooksContract.View {
 
                 case MSG_LOADMORE_UI_DELETE:
                     //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_DELETE : ");
-                    mBookAdapter.mBooks.remove(mBookAdapter.mBooks.size() - 1);
-                    mBookAdapter.notifyItemRemoved(mBookAdapter.mBooks.size());
+                    mBookAdapter.getData().remove(mBookAdapter.getData().size() - 1);
+                    mBookAdapter.notifyItemRemoved(mBookAdapter.getData().size());
                     break;
 
                 case MSG_LOADMORE_DATA:
@@ -102,8 +105,13 @@ public class BooksFragment extends Fragment implements BooksContract.View {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBookAdapter = new BookAdapter(new ArrayList<>(0),
-                R.layout.recyclerview_book_item, R.layout.recyclerview_loading_item);
+        mBookAdapter = new BaseRecycleViewAdapter(
+                new ArrayList<>(0),
+                R.layout.recyclerview_book_item,
+                R.layout.recyclerview_loading_item,
+                itemView -> new BookViewHolder(itemView),
+                loadingItemView -> new LoadingViewHolder(loadingItemView)
+        );
         mAdapterBooksData = new ArrayList<>();
         mHandler = new BooksHandle();
     }
@@ -192,8 +200,8 @@ public class BooksFragment extends Fragment implements BooksContract.View {
 //                "mAdapterMoviesData.size() =  " + mAdapterBooksData.size()
 //                + ", LoadMoreList.size = " + books.size() + ", adapter's movies.size = " + mBookAdapter.mBooks.size());
 
-        mBookAdapter.mBooks.remove(mBookAdapter.mBooks.size() - 1);
-        mBookAdapter.notifyItemRemoved(mBookAdapter.mBooks.size());
+        mBookAdapter.getData().remove(mBookAdapter.getData().size() - 1);
+        mBookAdapter.notifyItemRemoved(mBookAdapter.getData().size());
 
         mAdapterBooksData.addAll(books);
         mBookAdapter.replaceData(mAdapterBooksData);
@@ -235,71 +243,71 @@ public class BooksFragment extends Fragment implements BooksContract.View {
         mPresenter = presenter;
     }
 
-    static class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+//    static class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+//
+//        private List<Book> mBooks;
+//
+//        @LayoutRes
+//        private int mLayoutItemViewResId;
+//        @LayoutRes
+//        private int mLayoutLoadingResId;
+//
+//        public BookAdapter(@NonNull List<Book> books,
+//                           @LayoutRes int layoutItemViewId, @LayoutRes int layoutLoadingResId ){
+//            setList(books);
+//            this.mLayoutItemViewResId = layoutItemViewId;
+//            this.mLayoutLoadingResId = layoutLoadingResId;
+//        }
+//
+//        @Override
+//        public int getItemViewType(int position) {
+//            return mBooks.get(position) == null ? AppConstants.VIEW_TYPE_LOADING : AppConstants.VIEW_TYPE_ITEM;
+//        }
+//
+//        private void setList(List<Book> books){
+//            mBooks = checkNotNull(books);
+//        }
+//
+//        @Override
+//        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//
+//            RecyclerView.ViewHolder viewHolder;
+//
+//            if(AppConstants.VIEW_TYPE_ITEM == viewType) {
+//                View itemView = LayoutInflater.from(parent.getContext()).inflate(mLayoutItemViewResId, parent, false);
+//                viewHolder = new BookViewHolder(itemView);
+//            }else {
+//                View loadingView = LayoutInflater.from(parent.getContext()).inflate(mLayoutLoadingResId, parent, false);
+//                viewHolder = new LoadingViewHolder(loadingView);
+//            }
+//
+//            return viewHolder;
+//        }
+//
+//        @Override
+//        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+//            if(holder == null) return;
+//
+//            if(holder instanceof BookViewHolder) {
+//                ((BookViewHolder) holder).updateBook(mBooks.get(position));
+//
+//            }else if(holder instanceof LoadingViewHolder){
+//                ((LoadingViewHolder) holder).updateLoading();
+//            }
+//        }
+//
+//        @Override
+//        public int getItemCount() {
+//            return  mBooks == null ? 0 : mBooks.size();
+//        }
+//
+//        public void replaceData(List<Book> books) {
+//            setList(books);
+//            notifyDataSetChanged();
+//        }
+//    }
 
-        private List<Book> mBooks;
-
-        @LayoutRes
-        private int mLayoutItemViewResId;
-        @LayoutRes
-        private int mLayoutLoadingResId;
-
-        public BookAdapter(@NonNull List<Book> books,
-                           @LayoutRes int layoutItemViewId, @LayoutRes int layoutLoadingResId ){
-            setList(books);
-            this.mLayoutItemViewResId = layoutItemViewId;
-            this.mLayoutLoadingResId = layoutLoadingResId;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return mBooks.get(position) == null ? AppConstants.VIEW_TYPE_LOADING : AppConstants.VIEW_TYPE_ITEM;
-        }
-
-        private void setList(List<Book> books){
-            mBooks = checkNotNull(books);
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            RecyclerView.ViewHolder viewHolder;
-
-            if(AppConstants.VIEW_TYPE_ITEM == viewType) {
-                View itemView = LayoutInflater.from(parent.getContext()).inflate(mLayoutItemViewResId, parent, false);
-                viewHolder = new BookViewHolder(itemView);
-            }else {
-                View loadingView = LayoutInflater.from(parent.getContext()).inflate(mLayoutLoadingResId, parent, false);
-                viewHolder = new LoadingViewHolder(loadingView);
-            }
-
-            return viewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if(holder == null) return;
-
-            if(holder instanceof BookViewHolder) {
-                ((BookViewHolder) holder).updateBook(mBooks.get(position));
-
-            }else if(holder instanceof LoadingViewHolder){
-                ((LoadingViewHolder) holder).updateLoading();
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return  mBooks == null ? 0 : mBooks.size();
-        }
-
-        public void replaceData(List<Book> books) {
-            setList(books);
-            notifyDataSetChanged();
-        }
-    }
-
-    static class BookViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    static class BookViewHolder extends BaseRecycleViewHolder<Book> implements View.OnClickListener{
 
         CardView cardView;
         ImageView bookImage;
@@ -309,7 +317,6 @@ public class BooksFragment extends Fragment implements BooksContract.View {
         TextView bookPubDate;
         TextView bookPages;
         TextView bookPrice;
-        Book book;
 
         public BookViewHolder(View itemView) {
             super(itemView);
@@ -325,13 +332,10 @@ public class BooksFragment extends Fragment implements BooksContract.View {
             itemView.setOnClickListener(this);
         }
 
-        public void updateBook(Book book) {
-
-            if (book == null) return;
-            this.book = book;
-
+        @Override
+        protected void onBindItem(Book book) {
             Context context = itemView.getContext();
-            if (context == null) return;
+            if (book == null || context == null) return;
 
             //get the prefix string
             String prefixSubTitle = context.getString(R.string.prefix_subtitle);
@@ -351,21 +355,19 @@ public class BooksFragment extends Fragment implements BooksContract.View {
                     .load(book.getImages().getLarge())
                     .placeholder(context.getResources().getDrawable(R.mipmap.ic_launcher))
                     .into(bookImage);
-
         }
 
         @Override
         public void onClick(View v) {
             Log.e(HomeActivity.TAG, "==>Book onClick....Item");
 
-            if (book == null) return;
-            if (itemView == null) return;
+            if (itemView == null || itemContent == null) return;
 
             Context context = itemView.getContext();
             if (context == null) return;
 
             Intent intent = new Intent(context, BookDetailActivity.class);
-            intent.putExtra(AppConstants.INTENT_EXTRA_BOOK, book);
+            intent.putExtra(AppConstants.INTENT_EXTRA_BOOK, itemContent);
 
             if (context instanceof Activity) {
                 Activity activity = (Activity) context;
@@ -376,7 +378,7 @@ public class BooksFragment extends Fragment implements BooksContract.View {
         }
     }
 
-    static class LoadingViewHolder extends RecyclerView.ViewHolder {
+    static class LoadingViewHolder extends BaseRecycleViewHolder<Book> {
 
         ProgressBar progressBar;
 
@@ -385,14 +387,10 @@ public class BooksFragment extends Fragment implements BooksContract.View {
             progressBar = (ProgressBar) itemView.findViewById(R.id.loading_progress_bar);
         }
 
-        void updateLoading(){
-            progressBar.setIndeterminate(true);
+        @Override
+        protected void onBindItem(Book book) {
+            if(book == null) progressBar.setIndeterminate(true);
         }
-
-        void updateLoadingTitle() {
-
-        }
-
     }
 
 }

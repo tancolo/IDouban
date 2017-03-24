@@ -1,14 +1,11 @@
 package com.shrimpcolo.johnnytam.idouban.movies;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -40,12 +37,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_DATA;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_ADD;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_DELETE;
-import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.VIEW_TYPE_ITEM;
-import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.VIEW_TYPE_LOADING;
 import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder.BuilderItemViewHolder;
 import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder.BuilderLoadingViewHolder;
 
@@ -342,7 +336,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
 //
 //    }
 
-    public static class MovieViewHolder extends BaseRecycleViewHolder<Movie> implements View.OnClickListener {
+    static class MovieViewHolder extends BaseRecycleViewHolder<Movie> implements View.OnClickListener {
 
         ImageView mMovieImage;
 
