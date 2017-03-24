@@ -178,9 +178,9 @@ public class BooksFragment extends Fragment implements BooksContract.View {
         mAdapterBooksData.addAll(books);
         mBookAdapter.replaceData(mAdapterBooksData);
 
-        Log.e(HomeActivity.TAG,  TAG + " showRefreshedMovies: \n" +
-                "mAdapterMoviesData.size() =  " + mAdapterBooksData.size()
-        + ", getMoviesList.size = " + books.size() + ", adapter's movies.size = " + mBookAdapter.mBooks.size());
+//        Log.e(HomeActivity.TAG,  TAG + " showRefreshedMovies: \n" +
+//                "mAdapterMoviesData.size() =  " + mAdapterBooksData.size()
+//        + ", getMoviesList.size = " + books.size() + ", adapter's movies.size = " + mBookAdapter.mBooks.size());
 
         mBookRecyclerView.setVisibility(View.VISIBLE);
         mNoBooksView.setVisibility(View.GONE);
@@ -188,9 +188,9 @@ public class BooksFragment extends Fragment implements BooksContract.View {
 
     @Override
     public void showLoadedMoreBooks(List<Book> books) {
-        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 111 : \n" +
-                "mAdapterMoviesData.size() =  " + mAdapterBooksData.size()
-                + ", LoadMoreList.size = " + books.size() + ", adapter's movies.size = " + mBookAdapter.mBooks.size());
+//        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 111 : \n" +
+//                "mAdapterMoviesData.size() =  " + mAdapterBooksData.size()
+//                + ", LoadMoreList.size = " + books.size() + ", adapter's movies.size = " + mBookAdapter.mBooks.size());
 
         mBookAdapter.mBooks.remove(mBookAdapter.mBooks.size() - 1);
         mBookAdapter.notifyItemRemoved(mBookAdapter.mBooks.size());
@@ -198,9 +198,9 @@ public class BooksFragment extends Fragment implements BooksContract.View {
         mAdapterBooksData.addAll(books);
         mBookAdapter.replaceData(mAdapterBooksData);
 
-        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 222 : \n" +
-                "mAdapterMoviesData.size() =  " + mAdapterBooksData.size()
-                + ", LoadMoreList.size = " + books.size() + ", adapter's movies.size = " + mBookAdapter.mBooks.size());
+//        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 222 : \n" +
+//                "mAdapterMoviesData.size() =  " + mAdapterBooksData.size()
+//                + ", LoadMoreList.size = " + books.size() + ", adapter's movies.size = " + mBookAdapter.mBooks.size());
 
     }
 
