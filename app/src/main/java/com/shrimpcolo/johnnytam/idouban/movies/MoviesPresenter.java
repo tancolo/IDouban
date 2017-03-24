@@ -4,9 +4,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
-import com.shrimpcolo.johnnytam.idouban.api.IDoubanService;
-import com.shrimpcolo.johnnytam.idouban.beans.HotMoviesInfo;
-import com.shrimpcolo.johnnytam.idouban.beans.Movie;
+import com.shrimpcolo.johnnytam.idouban.mobileapi.IDoubanService;
+import com.shrimpcolo.johnnytam.idouban.entity.HotMoviesInfo;
+import com.shrimpcolo.johnnytam.idouban.entity.Movie;
 
 import java.util.List;
 

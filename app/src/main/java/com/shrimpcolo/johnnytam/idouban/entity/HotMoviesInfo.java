@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.beans;
+package com.shrimpcolo.johnnytam.idouban.entity;
 
 import com.google.gson.annotations.SerializedName;
 

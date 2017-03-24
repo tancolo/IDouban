@@ -4,9 +4,9 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
-import com.shrimpcolo.johnnytam.idouban.api.IDoubanService;
-import com.shrimpcolo.johnnytam.idouban.beans.Book;
-import com.shrimpcolo.johnnytam.idouban.beans.BooksInfo;
+import com.shrimpcolo.johnnytam.idouban.mobileapi.IDoubanService;
+import com.shrimpcolo.johnnytam.idouban.entity.Book;
+import com.shrimpcolo.johnnytam.idouban.entity.BooksInfo;
 
 import java.util.List;
 

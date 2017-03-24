@@ -28,11 +28,11 @@ import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
-import com.shrimpcolo.johnnytam.idouban.beans.Book;
+import com.shrimpcolo.johnnytam.idouban.entity.Book;
 import com.shrimpcolo.johnnytam.idouban.bookdetail.BookDetailActivity;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
-import com.shrimpcolo.johnnytam.idouban.utils.EndlessRecyclerViewScrollListener;
-import com.shrimpcolo.johnnytam.idouban.utils.ScrollChildSwipeRefreshLayout;
+import com.shrimpcolo.johnnytam.idouban.listener.OnEndlessRecyclerViewScrollListener;
+import com.shrimpcolo.johnnytam.idouban.ui.ScrollChildSwipeRefreshLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -139,7 +139,7 @@ public class BooksFragment extends Fragment implements BooksContract.View {
         });
 
         //set listener to recycle view
-        mBookRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
+        mBookRecyclerView.addOnScrollListener(new OnEndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public int getFooterViewType(int defaultNoFooterViewType) {
                 return 1;//use Footer view

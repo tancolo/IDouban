@@ -2,7 +2,7 @@ package com.shrimpcolo.johnnytam.idouban.books;
 
 import com.shrimpcolo.johnnytam.idouban.BasePresenter;
 import com.shrimpcolo.johnnytam.idouban.BaseView;
-import com.shrimpcolo.johnnytam.idouban.beans.Book;
+import com.shrimpcolo.johnnytam.idouban.entity.Book;
 
 import java.util.List;
 

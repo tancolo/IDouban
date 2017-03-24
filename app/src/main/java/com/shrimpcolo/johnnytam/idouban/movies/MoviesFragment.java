@@ -28,11 +28,11 @@ import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
-import com.shrimpcolo.johnnytam.idouban.beans.Movie;
+import com.shrimpcolo.johnnytam.idouban.entity.Movie;
 import com.shrimpcolo.johnnytam.idouban.moviedetail.MovieDetailActivity;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
-import com.shrimpcolo.johnnytam.idouban.utils.EndlessRecyclerViewScrollListener;
-import com.shrimpcolo.johnnytam.idouban.utils.ScrollChildSwipeRefreshLayout;
+import com.shrimpcolo.johnnytam.idouban.listener.OnEndlessRecyclerViewScrollListener;
+import com.shrimpcolo.johnnytam.idouban.ui.ScrollChildSwipeRefreshLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -149,7 +149,7 @@ public class MoviesFragment extends Fragment implements MoviesContract.View{
             mPresenter.loadRefreshedMovies(true);
         });
 
-        mRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
+        mRecyclerView.addOnScrollListener(new OnEndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public int getFooterViewType(int defaultNoFooterViewType) {
                 return 1;// -1: 不存在FooterView， 其他数字表示存在FooterView

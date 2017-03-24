@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 
 import com.shrimpcolo.johnnytam.idouban.R;
-import com.shrimpcolo.johnnytam.idouban.beans.Movie;
+import com.shrimpcolo.johnnytam.idouban.entity.Movie;
 
 /**
  * Created by Johnny Tam on 2017/3/20.

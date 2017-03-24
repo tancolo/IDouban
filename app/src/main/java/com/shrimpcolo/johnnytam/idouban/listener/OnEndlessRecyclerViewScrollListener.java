@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.utils;
+package com.shrimpcolo.johnnytam.idouban.listener;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +9,7 @@ import android.util.Log;
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 
 
-public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
+public abstract class OnEndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     // The minimum amount of items to have below your current scroll position
     // before loading more.
     private int visibleThreshold = 2;//default is 5
@@ -31,18 +31,18 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
 
     RecyclerView.LayoutManager mLayoutManager;
 
-    public EndlessRecyclerViewScrollListener(LinearLayoutManager layoutManager) {
+    public OnEndlessRecyclerViewScrollListener(LinearLayoutManager layoutManager) {
         init();
         this.mLayoutManager = layoutManager;
     }
 
-    public EndlessRecyclerViewScrollListener(GridLayoutManager layoutManager) {
+    public OnEndlessRecyclerViewScrollListener(GridLayoutManager layoutManager) {
         init();
         this.mLayoutManager = layoutManager;
         visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
     }
 
-    public EndlessRecyclerViewScrollListener(StaggeredGridLayoutManager layoutManager) {
+    public OnEndlessRecyclerViewScrollListener(StaggeredGridLayoutManager layoutManager) {
         init();
         this.mLayoutManager = layoutManager;
         visibleThreshold = visibleThreshold * layoutManager.getSpanCount();

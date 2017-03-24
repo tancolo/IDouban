@@ -1,4 +1,4 @@
-package com.shrimpcolo.johnnytam.idouban.api;
+package com.shrimpcolo.johnnytam.idouban.mobileapi;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.shrimpcolo.johnnytam.idouban.R;
-import com.shrimpcolo.johnnytam.idouban.beans.Movie;
+import com.shrimpcolo.johnnytam.idouban.entity.Movie;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
 import com.squareup.picasso.Picasso;
 
