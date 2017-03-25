@@ -75,8 +75,8 @@ public class HomeActivity extends BaseActivity {
         MoviesFragment moviesFragment = MoviesFragment.newInstance();
         BooksFragment booksFragment = BooksFragment.newInstance();
 
-        Log.e(TAG, SUB + " setupViewPager, moviesFragment = " + moviesFragment);
-        Log.e(TAG, SUB + " setupViewPager, booksFragment = " + booksFragment);
+        //Log.e(TAG, SUB + " setupViewPager, moviesFragment = " + moviesFragment);
+        //Log.e(TAG, SUB + " setupViewPager, booksFragment = " + booksFragment);
 
         pagerAdapter.addFragment(booksFragment,
                 getApplicationContext().getResources().getString(R.string.tab_books_fragment));
@@ -131,5 +131,11 @@ public class HomeActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(HomeActivity.TAG, TAG + "=> onDestroy!!!");
     }
 }

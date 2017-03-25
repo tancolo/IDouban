@@ -61,7 +61,7 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_LOADMORE_UI_ADD:
-                    Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_ADD totalItem: " + msg.arg1);
+                    Log.e(HomeActivity.TAG, "Movies => MSG_LOADMORE_UI_ADD totalItem: " + msg.arg1);
 
                     mIsLoading = true;//Loading UI显示，在没有完成时候，不能再次去请求Load More
                     mAdapter.getData().add(null);
@@ -72,7 +72,7 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
                     break;
 
                 case MSG_LOADMORE_UI_DELETE:
-                    Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_DELETE : ");
+                    Log.e(HomeActivity.TAG, "Movies => MSG_LOADMORE_UI_DELETE : ");
                     mAdapter.getData().remove(mAdapter.getData().size() - 1);
                     mAdapter.notifyItemRemoved(mAdapter.getData().size());
 
@@ -81,7 +81,7 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
                     break;
 
                 case MSG_LOADMORE_DATA:
-                    Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_DATA totalItem: " + msg.arg1);
+                    Log.e(HomeActivity.TAG, "Movies => MSG_LOADMORE_DATA totalItem: " + msg.arg1);
                     mPresenter.loadMoreMovies(msg.arg1);
                     break;
                 default:
@@ -175,7 +175,6 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
             public boolean isLoading() {
                 return mIsLoading;
             }
-
         });
     }
 
@@ -196,7 +195,7 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
          *  But, in simple, I don't care that case.
          */
         //If the refreshed data is a part of mAdapterMovieData, don't operate mAdapter
-        if(mAdapterData.size() != 0 && movies.get(0).getId().equals(((Movie)mAdapterData.get(0)).getId())) {
+        if(mAdapterData.size() != 0 && movies.get(0).getId().equals(mAdapterData.get(0).getId())) {
             return;
         }
 
@@ -381,6 +380,7 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e(HomeActivity.TAG, "onDestroy()!!!");
+        mAdapterData.clear();
+        Log.e(HomeActivity.TAG, TAG + "=> onDestroy()!!!");
     }
 }

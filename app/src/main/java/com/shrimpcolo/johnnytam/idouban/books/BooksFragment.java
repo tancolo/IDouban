@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -26,6 +25,7 @@ import android.widget.TextView;
 
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
+import com.shrimpcolo.johnnytam.idouban.base.BaseFragment;
 import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewAdapter;
 import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder;
 import com.shrimpcolo.johnnytam.idouban.entity.Book;
@@ -45,49 +45,39 @@ import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_U
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BooksFragment extends Fragment implements BooksContract.View {
+public class BooksFragment extends BaseFragment<Book> implements BooksContract.View {
     private static final String TAG = BooksFragment.class.getSimpleName();
 
     private BooksContract.Presenter mPresenter;
 
-    private RecyclerView mBookRecyclerView;
-
     private View mNoBooksView;
-
-    private BaseRecycleViewAdapter mBookAdapter;
-
-    private List<Book> mAdapterBooksData;
-
-    private BooksHandle mHandler;
-
-    private boolean mIsLoading = false;
 
     class BooksHandle extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_LOADMORE_UI_ADD:
-                    //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_ADD totalItem: " + msg.arg1);
+                    Log.e(HomeActivity.TAG, "Books => MSG_LOADMORE_UI_ADD totalItem: " + msg.arg1);
 
                     mIsLoading = true;//Loading UI显示，在没有完成时候，不能再次去请求Load More
-                    mBookAdapter.getData().add(null);
-                    mBookAdapter.notifyItemInserted(mBookAdapter.getData().size() - 1);
+                    mAdapter.getData().add(null);
+                    mAdapter.notifyItemInserted(mAdapter.getData().size() - 1);
 
                     Message msgLoadMore = mHandler.obtainMessage(MSG_LOADMORE_DATA, msg.arg1, -1);
                     mHandler.sendMessage(msgLoadMore);
                     break;
 
                 case MSG_LOADMORE_UI_DELETE:
-                    //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_UI_DELETE : ");
-                    mBookAdapter.getData().remove(mBookAdapter.getData().size() - 1);
-                    mBookAdapter.notifyItemRemoved(mBookAdapter.getData().size());
+                    Log.e(HomeActivity.TAG, "Books => MSG_LOADMORE_UI_DELETE : ");
+                    mAdapter.getData().remove(mAdapter.getData().size() - 1);
+                    mAdapter.notifyItemRemoved(mAdapter.getData().size());
 
                     //Loading UI要从mMovieAdapter最后一行消失了，说明 Loading 完成或者是没有更多数据了
                     mIsLoading = false;
                     break;
 
                 case MSG_LOADMORE_DATA:
-                    //Log.e(HomeActivity.TAG, "==> MSG_LOADMORE_DATA load start index: " + msg.arg1);
+                    Log.e(HomeActivity.TAG, "Books => MSG_LOADMORE_DATA load start index: " + msg.arg1);
                     mPresenter.loadMoreBooks(msg.arg1);
                     break;
                 default:
@@ -97,63 +87,71 @@ public class BooksFragment extends Fragment implements BooksContract.View {
     }
 
 
-//    public BooksFragment() {
-//        // Required empty public constructor
-//    }
+    public BooksFragment() {
+        // Required empty public constructor
+    }
 
     public static BooksFragment newInstance() {
         return new BooksFragment();
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mBookAdapter = new BaseRecycleViewAdapter(
-                new ArrayList<>(0),
-                R.layout.recyclerview_book_item,
-                R.layout.recyclerview_loading_item,
-                itemView -> new BookViewHolder(itemView),
-                loadingItemView -> new LoadingViewHolder(loadingItemView)
-        );
-        mAdapterBooksData = new ArrayList<>();
+    protected void initVariables() {
+        mAdapterData = new ArrayList<>();
         mHandler = new BooksHandle();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void initRecycleViewAdapter() {
+        mAdapter = new BaseRecycleViewAdapter<>(
+                new ArrayList<>(0),
+                R.layout.recyclerview_book_item,
+                R.layout.recyclerview_loading_item,
+                BookViewHolder::new,
+                LoadingViewHolder::new
+        );
+    }
+
+    @Override
+    protected void initRecycleView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view  = inflater.inflate(R.layout.fragment_books, container, false);
-        mBookRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_books);
-        mNoBooksView = view.findViewById(R.id.ll_no_books);
+        mView  = inflater.inflate(R.layout.fragment_books, container, false);
+        mRecyclerView = (RecyclerView) mView.findViewById(R.id.recycler_books);
+        mNoBooksView = mView.findViewById(R.id.ll_no_books);
 
         //set recycle view
-        mBookRecyclerView.setHasFixedSize(true);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
-        mBookRecyclerView.setLayoutManager(layoutManager);
-        mBookRecyclerView.setAdapter(mBookAdapter);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+    }
 
+    @Override
+    protected void initSwipeRefreshLayout() {
         // Set up progress indicator
         final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
-                (ScrollChildSwipeRefreshLayout) view.findViewById(R.id.book_refresh_layout);
+                (ScrollChildSwipeRefreshLayout) mView.findViewById(R.id.book_refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(getActivity(), R.color.colorPrimary),
                 ContextCompat.getColor(getActivity(), R.color.colorAccent),
                 ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)
         );
         // Set the scrolling view in the custom SwipeRefreshLayout.
-        swipeRefreshLayout.setScrollUpChild(mBookRecyclerView);
+        swipeRefreshLayout.setScrollUpChild(mRecyclerView);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             Log.e(HomeActivity.TAG, "\n\n onRefresh loadRefreshedBooks...");
             mPresenter.loadRefreshedBooks(true);
         });
+    }
 
+    @Override
+    protected void initEndlessScrollListener() {
         //set listener to recycle view
-        mBookRecyclerView.addOnScrollListener(new OnEndlessRecyclerViewScrollListener(layoutManager) {
+        mRecyclerView.addOnScrollListener(new OnEndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
             public int getFooterViewType(int defaultNoFooterViewType) {
-                return 1;//use Footer view
+                return AppConstants.VIEW_TYPE_LOADING;//use Footer view
             }
 
             @Override
@@ -169,14 +167,10 @@ public class BooksFragment extends Fragment implements BooksContract.View {
                 return mIsLoading;
             }
         });
-
-        return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
+    protected void startPresenter() {
         if(mPresenter != null){
             mPresenter.start();
         }
@@ -186,45 +180,45 @@ public class BooksFragment extends Fragment implements BooksContract.View {
     public void showRefreshedBooks(List<Book> books) {
 
         //If the refreshed data is a part of mAdapterMovieData, don't operate mMovieAdapter
-        if(mAdapterBooksData.size() != 0
-                && books.get(0).getId().equals(mAdapterBooksData.get(0).getId())) {
+        if(mAdapterData.size() != 0
+                && books.get(0).getId().equals(mAdapterData.get(0).getId())) {
             return;
         }
 
-        mAdapterBooksData.addAll(books);
-        mBookAdapter.replaceData(mAdapterBooksData);
+        mAdapterData.addAll(books);
+        mAdapter.replaceData(mAdapterData);
 
 //        Log.e(HomeActivity.TAG,  TAG + " showRefreshedMovies: \n" +
-//                "mAdapterMoviesData.size() =  " + mAdapterBooksData.size()
-//        + ", getMoviesList.size = " + books.size() + ", adapter's movies.size = " + mBookAdapter.mBooks.size());
+//                "mAdapterMoviesData.size() =  " + mAdapterData.size()
+//        + ", getMoviesList.size = " + books.size() + ", adapter's movies.size = " + mAdapter.mBooks.size());
 
-        mBookRecyclerView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
         mNoBooksView.setVisibility(View.GONE);
     }
 
     @Override
     public void showLoadedMoreBooks(List<Book> books) {
 //        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 111 : \n" +
-//                "mAdapterMoviesData.size() =  " + mAdapterBooksData.size()
-//                + ", LoadMoreList.size = " + books.size() + ", adapter's movies.size = " + mBookAdapter.mBooks.size());
+//                "mAdapterMoviesData.size() =  " + mAdapterData.size()
+//                + ", LoadMoreList.size = " + books.size() + ", adapter's movies.size = " + mAdapter.mBooks.size());
 
-        mBookAdapter.getData().remove(mBookAdapter.getData().size() - 1);
-        mBookAdapter.notifyItemRemoved(mBookAdapter.getData().size());
+        mAdapter.getData().remove(mAdapter.getData().size() - 1);
+        mAdapter.notifyItemRemoved(mAdapter.getData().size());
 
-        mAdapterBooksData.addAll(books);
-        mBookAdapter.replaceData(mAdapterBooksData);
+        mAdapterData.addAll(books);
+        mAdapter.replaceData(mAdapterData);
 
         mIsLoading = false;//通知OnEndlessRecycleViewScrollListener 可以再次加载数据(如果有的话)
 
 //        Log.e(HomeActivity.TAG,  TAG + " showLoadedMoreMovies 222 : \n" +
-//                "mAdapterMoviesData.size() =  " + mAdapterBooksData.size()
-//                + ", LoadMoreList.size = " + books.size() + ", adapter's movies.size = " + mBookAdapter.mBooks.size());
+//                "mAdapterMoviesData.size() =  " + mAdapterData.size()
+//                + ", LoadMoreList.size = " + books.size() + ", adapter's movies.size = " + mAdapter.mBooks.size());
 
     }
 
     @Override
     public void showNoBooks() {
-        mBookRecyclerView.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.GONE);
         mNoBooksView.setVisibility(View.VISIBLE);
     }
 
@@ -252,70 +246,6 @@ public class BooksFragment extends Fragment implements BooksContract.View {
     public void setPresenter(BooksContract.Presenter presenter) {
         mPresenter = presenter;
     }
-
-//    static class BookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-//
-//        private List<Book> mBooks;
-//
-//        @LayoutRes
-//        private int mLayoutItemViewResId;
-//        @LayoutRes
-//        private int mLayoutLoadingResId;
-//
-//        public BookAdapter(@NonNull List<Book> books,
-//                           @LayoutRes int layoutItemViewId, @LayoutRes int layoutLoadingResId ){
-//            setList(books);
-//            this.mLayoutItemViewResId = layoutItemViewId;
-//            this.mLayoutLoadingResId = layoutLoadingResId;
-//        }
-//
-//        @Override
-//        public int getItemViewType(int position) {
-//            return mBooks.get(position) == null ? AppConstants.VIEW_TYPE_LOADING : AppConstants.VIEW_TYPE_ITEM;
-//        }
-//
-//        private void setList(List<Book> books){
-//            mBooks = checkNotNull(books);
-//        }
-//
-//        @Override
-//        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//
-//            RecyclerView.ViewHolder viewHolder;
-//
-//            if(AppConstants.VIEW_TYPE_ITEM == viewType) {
-//                View itemView = LayoutInflater.from(parent.getContext()).inflate(mLayoutItemViewResId, parent, false);
-//                viewHolder = new BookViewHolder(itemView);
-//            }else {
-//                View loadingView = LayoutInflater.from(parent.getContext()).inflate(mLayoutLoadingResId, parent, false);
-//                viewHolder = new LoadingViewHolder(loadingView);
-//            }
-//
-//            return viewHolder;
-//        }
-//
-//        @Override
-//        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-//            if(holder == null) return;
-//
-//            if(holder instanceof BookViewHolder) {
-//                ((BookViewHolder) holder).updateBook(mBooks.get(position));
-//
-//            }else if(holder instanceof LoadingViewHolder){
-//                ((LoadingViewHolder) holder).updateLoading();
-//            }
-//        }
-//
-//        @Override
-//        public int getItemCount() {
-//            return  mBooks == null ? 0 : mBooks.size();
-//        }
-//
-//        public void replaceData(List<Book> books) {
-//            setList(books);
-//            notifyDataSetChanged();
-//        }
-//    }
 
     static class BookViewHolder extends BaseRecycleViewHolder<Book> implements View.OnClickListener{
 
@@ -403,4 +333,10 @@ public class BooksFragment extends Fragment implements BooksContract.View {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(HomeActivity.TAG, TAG + "=> onDestroy!!!");
+        mAdapterData.clear();
+    }
 }
