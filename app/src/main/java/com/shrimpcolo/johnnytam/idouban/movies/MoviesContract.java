@@ -38,5 +38,7 @@ public interface MoviesContract {
         void loadMoreMovies(int movieStartIndex);
 
         void openMovieDetails(Movie clickedMovie);//not used
+
+        void cancelRetrofitRequest();
     }
 }

@@ -32,6 +32,8 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
     private int mMovieTotal;
 
+    private Call<HotMoviesInfo> mMoviesRetrofitCallback;
+
     public MoviesPresenter(@NonNull IDoubanService moviesService, @NonNull MoviesContract.View moviesView) {
         mIDuobanService = checkNotNull(moviesService, "IDoubanServie cannot be null!");
         mMoviesView = checkNotNull(moviesView, "moviesView cannot be null!");
@@ -57,6 +59,12 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     }
 
     @Override
+    public void cancelRetrofitRequest() {
+        Log.e(HomeActivity.TAG, TAG + "=> cancelRetrofitRequest() isCanceled = " + mMoviesRetrofitCallback.isCanceled());
+        if(!mMoviesRetrofitCallback.isCanceled()) mMoviesRetrofitCallback.cancel();
+    }
+
+    @Override
     public void start() {
         Log.e(HomeActivity.TAG, TAG + ", start() ");
         loadRefreshedMovies(false);
@@ -69,7 +77,8 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         }
 
         if(forceUpdate) {
-            mIDuobanService.searchHotMovies(0).enqueue(new Callback<HotMoviesInfo>() {
+            mMoviesRetrofitCallback = mIDuobanService.searchHotMovies(0);
+            mMoviesRetrofitCallback.enqueue(new Callback<HotMoviesInfo>() {
                 @Override
                 public void onResponse(Call<HotMoviesInfo> call, Response<HotMoviesInfo> response) {
                     Log.d(HomeActivity.TAG, "===> onResponse: Thread.Id = " + Thread.currentThread().getId());
@@ -115,7 +124,8 @@ public class MoviesPresenter implements MoviesContract.Presenter {
             return;
         }
 
-        mIDuobanService.searchHotMovies(movieStartIndex).enqueue(new Callback<HotMoviesInfo>() {
+        mMoviesRetrofitCallback = mIDuobanService.searchHotMovies(movieStartIndex);
+        mMoviesRetrofitCallback.enqueue(new Callback<HotMoviesInfo>() {
             @Override
             public void onResponse(Call<HotMoviesInfo> call, Response<HotMoviesInfo> response) {
                 List<Movie> moreMoviesList = response.body().getMovies();

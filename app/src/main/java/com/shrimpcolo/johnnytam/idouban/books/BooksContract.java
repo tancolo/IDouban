@@ -31,6 +31,8 @@ public interface BooksContract {
 
         void loadMoreBooks(int bookStartIndex);
 
+        void cancelRetrofitRequest();
+
     }
 
 
