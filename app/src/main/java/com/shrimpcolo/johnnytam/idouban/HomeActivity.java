@@ -80,8 +80,8 @@ public class HomeActivity extends BaseActivity {
 
         pagerAdapter.addFragment(booksFragment,
                 getApplicationContext().getResources().getString(R.string.tab_books_fragment));
-        pagerAdapter.addFragment(moviesFragment
-                , getApplicationContext().getResources().getString(R.string.tab_movies_fragment));
+        pagerAdapter.addFragment(moviesFragment,
+                getApplicationContext().getResources().getString(R.string.tab_movies_fragment));
 
         viewPager.setAdapter(pagerAdapter);
 

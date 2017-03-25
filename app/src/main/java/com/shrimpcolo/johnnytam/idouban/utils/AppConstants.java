@@ -29,4 +29,6 @@ public final class AppConstants {
     public static final int VIEW_TYPE_ITEM = 0;
 
     public static final int VIEW_TYPE_LOADING = 1;
+
+    public static final int MSG_LOADMORE_UI_DELETE_DELAYED = 500; //ms
 }

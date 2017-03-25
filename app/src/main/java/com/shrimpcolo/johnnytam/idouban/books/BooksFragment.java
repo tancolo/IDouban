@@ -97,9 +97,9 @@ public class BooksFragment extends Fragment implements BooksContract.View {
     }
 
 
-    public BooksFragment() {
-        // Required empty public constructor
-    }
+//    public BooksFragment() {
+//        // Required empty public constructor
+//    }
 
     public static BooksFragment newInstance() {
         return new BooksFragment();
