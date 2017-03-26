@@ -20,11 +20,7 @@ public interface MoviesContract {
 
         void showNoMovies();
 
-        void showMovieDetailUi(String movieName);//not used
-
         void setRefreshedIndicator(boolean active);//indicator of SwipeRefreshLayout
-
-        void setLoadMoreIndicator(boolean active); //indicator of LoadMore Movies
 
         void showNoLoadedMoreMovies();
 
@@ -36,9 +32,5 @@ public interface MoviesContract {
         void loadRefreshedMovies(boolean forceUpdate);
 
         void loadMoreMovies(int movieStartIndex);
-
-        void openMovieDetails(Movie clickedMovie);//not used
-
-        void cancelRetrofitRequest();
     }
 }

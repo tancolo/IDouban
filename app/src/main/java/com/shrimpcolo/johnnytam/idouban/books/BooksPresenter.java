@@ -47,8 +47,13 @@ public class BooksPresenter implements BooksContract.Presenter{
     }
 
     @Override
-    public void start() {
+    public void subscribe() {
         loadRefreshedBooks(false);
+    }
+
+    @Override
+    public void unsubscribe() {
+
     }
 
     private void loadBooks(boolean forceUpdate, final boolean showLoadingUI){

@@ -77,7 +77,7 @@ public class BooksFragment extends BaseFragment<Book> implements BooksContract.V
                     break;
 
                 case MSG_LOADMORE_DATA:
-                    Log.e(HomeActivity.TAG, "Books => MSG_LOADMORE_DATA load start index: " + msg.arg1);
+                    Log.e(HomeActivity.TAG, "Books => MSG_LOADMORE_DATA load subscribe index: " + msg.arg1);
                     mPresenter.loadMoreBooks(msg.arg1);
                     break;
                 default:
@@ -172,7 +172,7 @@ public class BooksFragment extends BaseFragment<Book> implements BooksContract.V
     @Override
     protected void startPresenter() {
         if(mPresenter != null){
-            mPresenter.start();
+            mPresenter.subscribe();
         }
     }
 

@@ -27,8 +27,13 @@ public class MovieDetailPresenter implements MovieDetailContract.Presenter{
     }
 
     @Override
-    public void start() {
+    public void subscribe() {
         showMovieDetail();
+    }
+
+    @Override
+    public void unsubscribe() {
+
     }
 
     private void showMovieDetail(){

@@ -11,7 +11,7 @@ public class HotMoviesInfo {
 
     /**
      * count : 20
-     * start : 0
+     * subscribe : 0
      * total : 23
      */
 

@@ -3,7 +3,10 @@ package com.shrimpcolo.johnnytam.idouban.mobileapi;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Johnny Tam on 2016/7/10.
@@ -29,6 +32,7 @@ public class DoubanManager {
         return new Retrofit.Builder()
                 .baseUrl(IDoubanService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
                 //.client(httpClient)
                 .build();
     }

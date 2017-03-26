@@ -182,7 +182,7 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
     protected void startPresenter() {
         //Log.e(HomeActivity.TAG,  TAG + " onViewCreated(): Presenter!  "  + mPresenter);
         if(mPresenter != null) {
-            mPresenter.start();
+            mPresenter.subscribe();
         }
     }
 
@@ -236,11 +236,6 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
     }
 
     @Override
-    public void setLoadMoreIndicator(boolean active) {
-
-    }
-
-    @Override
     public void showNoLoadedMoreMovies() {
         Log.e(HomeActivity.TAG, "\n\n showNoLoadedMoreMovies");
 
@@ -250,10 +245,6 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
     @Override
     public void setMoviesTotal(int total) {
         mMovieTotal = total;
-    }
-
-    @Override
-    public void showMovieDetailUi(String movieName) {
     }
 
     @Override
@@ -381,7 +372,7 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
     public void onDestroy() {
         super.onDestroy();
         mAdapterData.clear();
-        mPresenter.cancelRetrofitRequest();
+        mPresenter.unsubscribe();
         Log.e(HomeActivity.TAG, TAG + "=> onDestroy()!!!");
     }
 }

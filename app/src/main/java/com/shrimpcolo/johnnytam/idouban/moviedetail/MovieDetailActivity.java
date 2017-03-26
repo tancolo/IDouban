@@ -67,7 +67,7 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailCont
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.start();
+        mPresenter.subscribe();
     }
 
     private void setupViewPager(ViewPager viewPager) {
