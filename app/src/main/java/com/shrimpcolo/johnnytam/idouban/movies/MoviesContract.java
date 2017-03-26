@@ -2,7 +2,7 @@ package com.shrimpcolo.johnnytam.idouban.movies;
 
 import com.shrimpcolo.johnnytam.idouban.BasePresenter;
 import com.shrimpcolo.johnnytam.idouban.BaseView;
-import com.shrimpcolo.johnnytam.idouban.entity.Movie;
+import com.shrimpcolo.johnnytam.idouban.mobileapi.model.Movie;
 
 import java.util.List;
 

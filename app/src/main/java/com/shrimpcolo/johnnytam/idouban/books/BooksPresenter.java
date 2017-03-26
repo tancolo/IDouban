@@ -5,8 +5,8 @@ import android.util.Log;
 
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.mobileapi.IDoubanService;
-import com.shrimpcolo.johnnytam.idouban.entity.Book;
-import com.shrimpcolo.johnnytam.idouban.entity.BooksInfo;
+import com.shrimpcolo.johnnytam.idouban.mobileapi.model.Book;
+import com.shrimpcolo.johnnytam.idouban.mobileapi.model.BooksInfo;
 
 import java.util.List;
 

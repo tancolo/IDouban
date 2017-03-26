@@ -28,8 +28,9 @@ import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.base.BaseFragment;
 import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewAdapter;
 import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder;
-import com.shrimpcolo.johnnytam.idouban.entity.Book;
+import com.shrimpcolo.johnnytam.idouban.mobileapi.model.Book;
 import com.shrimpcolo.johnnytam.idouban.bookdetail.BookDetailActivity;
+import com.shrimpcolo.johnnytam.idouban.listener.LoadMoreFilter;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
 import com.shrimpcolo.johnnytam.idouban.listener.OnEndlessRecyclerViewScrollListener;
 import com.shrimpcolo.johnnytam.idouban.ui.ScrollChildSwipeRefreshLayout;
@@ -148,7 +149,7 @@ public class BooksFragment extends BaseFragment<Book> implements BooksContract.V
     @Override
     protected void initEndlessScrollListener() {
         //set listener to recycle view
-        mRecyclerView.addOnScrollListener(new OnEndlessRecyclerViewScrollListener(mLayoutManager) {
+        mRecyclerView.addOnScrollListener(new OnEndlessRecyclerViewScrollListener(new LoadMoreFilter(mLayoutManager) {
             @Override
             public int getFooterViewType(int defaultNoFooterViewType) {
                 return AppConstants.VIEW_TYPE_LOADING;//use Footer view
@@ -166,7 +167,7 @@ public class BooksFragment extends BaseFragment<Book> implements BooksContract.V
             public boolean isLoading() {
                 return mIsLoading;
             }
-        });
+        }));
     }
 
     @Override

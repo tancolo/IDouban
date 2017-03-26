@@ -22,25 +22,29 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent;
+import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.base.BaseFragment;
 import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewAdapter;
 import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder;
-import com.shrimpcolo.johnnytam.idouban.entity.Movie;
+import com.shrimpcolo.johnnytam.idouban.mobileapi.model.Movie;
+import com.shrimpcolo.johnnytam.idouban.listener.LoadMoreFilter;
 import com.shrimpcolo.johnnytam.idouban.moviedetail.MovieDetailActivity;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
-import com.shrimpcolo.johnnytam.idouban.listener.OnEndlessRecyclerViewScrollListener;
 import com.shrimpcolo.johnnytam.idouban.ui.ScrollChildSwipeRefreshLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.functions.Action1;
+import rx.functions.Func1;
+
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_DATA;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_ADD;
 import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_DELETE;
-import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_DELETE_DELAYED;
 
 /**
  * 展示一系列电影{@link Movie} 页面， 使用RecycleView 展示
@@ -63,9 +67,7 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
                 case MSG_LOADMORE_UI_ADD:
                     Log.e(HomeActivity.TAG, "Movies => MSG_LOADMORE_UI_ADD totalItem: " + msg.arg1);
 
-                    mIsLoading = true;//Loading UI显示，在没有完成时候，不能再次去请求Load More
-                    mAdapter.getData().add(null);
-                    mAdapter.notifyItemInserted(mAdapter.getData().size() - 1);
+                    addProgress();
 
                     Message msgLoadMore = mHandler.obtainMessage(MSG_LOADMORE_DATA, msg.arg1, -1);
                     mHandler.sendMessage(msgLoadMore);
@@ -88,6 +90,12 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
                     break;
             }
         }
+    }
+
+    private void addProgress() {
+        mIsLoading = true;//Loading UI显示，在没有完成时候，不能再次去请求Load More
+        mAdapter.getData().add(null);
+        mRecyclerView.post(() -> mAdapter.notifyItemInserted(mAdapter.getData().size() - 1));
     }
 
     public MoviesFragment() {
@@ -157,7 +165,10 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
     @Override
     protected void initEndlessScrollListener() {
         Log.e(HomeActivity.TAG,  TAG + " onCreateView() -> initEndlessScrollListener");
-        mRecyclerView.addOnScrollListener(new OnEndlessRecyclerViewScrollListener(mLayoutManager) {
+
+        //RxView.scrolls(view) -> Observer<Void>
+//        RxView.clicks(mRecyclerView).subscribe();
+       final LoadMoreFilter loadMoreFilter = new LoadMoreFilter(mLayoutManager) {
             @Override
             public int getFooterViewType(int defaultNoFooterViewType) {
                 return AppConstants.VIEW_TYPE_LOADING;// -1: 不存在FooterView，
@@ -175,7 +186,22 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
             public boolean isLoading() {
                 return mIsLoading;
             }
+        };
+
+        RxRecyclerView.scrollEvents(mRecyclerView).filter(new Func1<RecyclerViewScrollEvent, Boolean>() {
+            @Override
+            public Boolean call(RecyclerViewScrollEvent recyclerViewScrollEvent) {
+                return loadMoreFilter.isEndOfList(recyclerViewScrollEvent.view(), recyclerViewScrollEvent.dy());
+            }
+        }).subscribe(new Action1<RecyclerViewScrollEvent>() {
+            @Override
+            public void call(RecyclerViewScrollEvent recyclerViewScrollEvent) {
+                addProgress();
+                mPresenter.loadMoreMovies(loadMoreFilter.getTotalItemCount());
+            }
         });
+
+//        mRecyclerView.addOnScrollListener(new OnEndlessRecyclerViewScrollListener(loadMoreFilter));
     }
 
     @Override
@@ -239,8 +265,23 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
     public void showNoLoadedMoreMovies() {
         Log.e(HomeActivity.TAG, "\n\n showNoLoadedMoreMovies");
 
-        mHandler.sendEmptyMessageDelayed(MSG_LOADMORE_UI_DELETE, MSG_LOADMORE_UI_DELETE_DELAYED);
+        //mHandler.sendEmptyMessageDelayed(MSG_LOADMORE_UI_DELETE, MSG_LOADMORE_UI_DELETE_DELAYED);
+        mRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                deleteProgress();
+            }
+        });
     }
+
+    private void deleteProgress() {
+        mAdapter.getData().remove(mAdapter.getData().size() - 1);
+        mAdapter.notifyItemRemoved(mAdapter.getData().size());
+
+        //Loading UI要从mMovieAdapter最后一行消失了，说明 Loading 完成或者是没有更多数据了
+        mIsLoading = false;
+    }
+
 
     @Override
     public void setMoviesTotal(int total) {

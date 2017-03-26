@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.base.BaseActivity;
 import com.shrimpcolo.johnnytam.idouban.base.BaseViewPagerAdapter;
-import com.shrimpcolo.johnnytam.idouban.entity.Book;
+import com.shrimpcolo.johnnytam.idouban.mobileapi.model.Book;
 import com.shrimpcolo.johnnytam.idouban.moviedetail.MovieDetailActivity;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
 import com.squareup.picasso.Picasso;
