@@ -1,16 +1,12 @@
 package com.shrimpcolo.johnnytam.idouban.movies;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.aspsine.swipetoloadlayout.SwipeToLoadLayout;
 import com.shrimpcolo.johnnytam.idouban.HomeActivity;
 import com.shrimpcolo.johnnytam.idouban.R;
 import com.shrimpcolo.johnnytam.idouban.base.BaseFragment;
@@ -30,17 +27,10 @@ import com.shrimpcolo.johnnytam.idouban.base.BaseRecycleViewHolder;
 import com.shrimpcolo.johnnytam.idouban.entity.Movie;
 import com.shrimpcolo.johnnytam.idouban.moviedetail.MovieDetailActivity;
 import com.shrimpcolo.johnnytam.idouban.utils.AppConstants;
-import com.shrimpcolo.johnnytam.idouban.listener.OnEndlessRecyclerViewScrollListener;
-import com.shrimpcolo.johnnytam.idouban.ui.ScrollChildSwipeRefreshLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_DATA;
-import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_ADD;
-import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_DELETE;
-import static com.shrimpcolo.johnnytam.idouban.utils.AppConstants.MSG_LOADMORE_UI_DELETE_DELAYED;
 
 /**
  * 展示一系列电影{@link Movie} 页面， 使用RecycleView 展示
@@ -55,40 +45,7 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
 
     private int mMovieTotal;
 
-    @SuppressLint("HandlerLeak")
-    class MoviesHandle extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_LOADMORE_UI_ADD:
-                    Log.e(HomeActivity.TAG, "Movies => MSG_LOADMORE_UI_ADD totalItem: " + msg.arg1);
-
-                    mIsLoading = true;//Loading UI显示，在没有完成时候，不能再次去请求Load More
-                    mAdapter.getData().add(null);
-                    mAdapter.notifyItemInserted(mAdapter.getData().size() - 1);
-
-                    Message msgLoadMore = mHandler.obtainMessage(MSG_LOADMORE_DATA, msg.arg1, -1);
-                    mHandler.sendMessage(msgLoadMore);
-                    break;
-
-                case MSG_LOADMORE_UI_DELETE:
-                    Log.e(HomeActivity.TAG, "Movies => MSG_LOADMORE_UI_DELETE : ");
-                    mAdapter.getData().remove(mAdapter.getData().size() - 1);
-                    mAdapter.notifyItemRemoved(mAdapter.getData().size());
-
-                    //Loading UI要从mMovieAdapter最后一行消失了，说明 Loading 完成或者是没有更多数据了
-                    mIsLoading = false;
-                    break;
-
-                case MSG_LOADMORE_DATA:
-                    Log.e(HomeActivity.TAG, "Movies => MSG_LOADMORE_DATA totalItem: " + msg.arg1);
-                    mPresenter.loadMoreMovies(msg.arg1);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
+    private SwipeToLoadLayout mSwipeToLoadLayout;
 
     public MoviesFragment() {
         // Required empty public constructor
@@ -102,7 +59,6 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
     @Override
     protected void initVariables() {
         Log.e(HomeActivity.TAG,  TAG + " onCreate() -> initVariables");
-        mHandler = new MoviesHandle();
         mAdapterData = new ArrayList<>();
     }
 
@@ -123,7 +79,8 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
         Log.e(HomeActivity.TAG,  TAG + " onCreateView() -> initRecycleView");
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_movies, container, false);
-        mRecyclerView = (RecyclerView) mView.findViewById(R.id.recycler_hot_movies);
+        mSwipeToLoadLayout = (SwipeToLoadLayout) mView.findViewById(R.id.swipeToLoadLayout);
+        mRecyclerView = (RecyclerView) mView.findViewById(R.id.swipe_target);
         mNoMoviesView = mView.findViewById(R.id.ll_no_movies);
 
         //set recycle view
@@ -137,43 +94,67 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
     protected void initSwipeRefreshLayout() {
 
         Log.e(HomeActivity.TAG,  TAG + " onCreateView() -> initSwipeRefreshLayout");
-
-        // Set up progress indicator
-        final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
-                (ScrollChildSwipeRefreshLayout) mView.findViewById(R.id.movie_refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(
-                ContextCompat.getColor(getActivity(), R.color.colorPrimary),
-                ContextCompat.getColor(getActivity(), R.color.colorAccent),
-                ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
-
-        // Set the scrolling view in the custom SwipeRefreshLayout.
-        swipeRefreshLayout.setScrollUpChild(mRecyclerView);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            Log.e(HomeActivity.TAG, "\n\n onRefresh loadRefreshedMovies...");
+        mSwipeToLoadLayout.setOnRefreshListener(() -> {
+            Log.e(HomeActivity.TAG, TAG + "=> onRefresh!");
             mPresenter.loadRefreshedMovies(true);
         });
+
+        mSwipeToLoadLayout.setOnLoadMoreListener(() -> {
+            Log.e(HomeActivity.TAG, TAG + "=> onLoadMore, item index is: " + mAdapter.getItemCount());
+            mPresenter.loadMoreMovies(mAdapter.getItemCount());
+        });
+
+        // Set up progress indicator
+//        final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
+//                (ScrollChildSwipeRefreshLayout) mView.findViewById(R.id.movie_refresh_layout);
+//        swipeRefreshLayout.setColorSchemeColors(
+//                ContextCompat.getColor(getActivity(), R.color.colorPrimary),
+//                ContextCompat.getColor(getActivity(), R.color.colorAccent),
+//                ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+//
+//        // Set the scrolling view in the custom SwipeRefreshLayout.
+//        swipeRefreshLayout.setScrollUpChild(mRecyclerView);
+//        swipeRefreshLayout.setOnRefreshListener(() -> {
+//            Log.e(HomeActivity.TAG, "\n\n onRefresh loadRefreshedMovies...");
+//            mPresenter.loadRefreshedMovies(true);
+//        });
     }
 
     @Override
     protected void initEndlessScrollListener() {
         Log.e(HomeActivity.TAG,  TAG + " onCreateView() -> initEndlessScrollListener");
-        mRecyclerView.addOnScrollListener(new OnEndlessRecyclerViewScrollListener(mLayoutManager) {
-            @Override
-            public int getFooterViewType(int defaultNoFooterViewType) {
-                return AppConstants.VIEW_TYPE_LOADING;// -1: 不存在FooterView，
-            }
+        setOnScrollListener();
+//        mRecyclerView.addOnScrollListener(new OnEndlessRecyclerViewScrollListener(mLayoutManager) {
+//            @Override
+//            public int getFooterViewType(int defaultNoFooterViewType) {
+//                return AppConstants.VIEW_TYPE_LOADING;// -1: 不存在FooterView，
+//            }
+//
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount) {
+//                Log.d(HomeActivity.TAG, "Movies CallBack onLoadMore => page: " + page + ", movies item count is " + totalItemsCount);
+//
+//                final Message msg = mHandler.obtainMessage(MSG_LOADMORE_UI_ADD, totalItemsCount, -1);
+//                msg.sendToTarget();
+//            }
+//
+//            @Override
+//            public boolean isLoading() {
+//                return mIsLoading;
+//            }
+//        });
+    }
 
+    private void setOnScrollListener() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                Log.d(HomeActivity.TAG, "Movies CallBack onLoadMore => page: " + page + ", movies item count is " + totalItemsCount);
-
-                final Message msg = mHandler.obtainMessage(MSG_LOADMORE_UI_ADD, totalItemsCount, -1);
-                msg.sendToTarget();
-            }
-
-            @Override
-            public boolean isLoading() {
-                return mIsLoading;
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE ){
+                    if (!ViewCompat.canScrollVertically(recyclerView, 1)){
+                        Log.e(HomeActivity.TAG, TAG + "=> onScrollStateChanged, LoadingMore = true");
+                        mSwipeToLoadLayout.setLoadingMore(true);
+                    }
+                }
             }
         });
     }
@@ -222,11 +203,13 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
                 "mAdapterData.size() =  " + mAdapterData.size()
                 + ", LoadMoreList.size = " + movies.size() + ", adapter's movies.size = " + mAdapter.getData().size());
 
-        mAdapter.getData().remove(mAdapter.getData().size() - 1);
-        mAdapter.notifyItemRemoved(mAdapter.getData().size());
+//        mAdapter.getData().remove(mAdapter.getData().size() - 1);
+//        mAdapter.notifyItemRemoved(mAdapter.getData().size());
 
         mAdapterData.addAll(movies);
         mAdapter.replaceData(mAdapterData);
+
+        mSwipeToLoadLayout.setLoadingMore(false);
 
         mIsLoading = false;//通知OnEndlessRecycleViewScrollListener 可以再次加载数据(如果有的话)
 
@@ -243,8 +226,7 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
     @Override
     public void showNoLoadedMoreMovies() {
         Log.e(HomeActivity.TAG, "\n\n showNoLoadedMoreMovies");
-
-        mHandler.sendEmptyMessageDelayed(MSG_LOADMORE_UI_DELETE, MSG_LOADMORE_UI_DELETE_DELAYED);
+        mSwipeToLoadLayout.setLoadingMore(false);
     }
 
     @Override
@@ -261,13 +243,14 @@ public class MoviesFragment extends BaseFragment<Movie> implements MoviesContrac
         if(getView() == null) return;
 
         Log.e(HomeActivity.TAG, TAG + "=> loading indicator: " + active);
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)getView().findViewById(R.id.movie_refresh_layout);
-
-        // Make sure setRefreshing() is called after the layout is done with everything else.
-        swipeRefreshLayout.post(() -> {
-            Log.e(HomeActivity.TAG, "swipeRefreshLayout run() active: " + active);
-            swipeRefreshLayout.setRefreshing(active);
-        });
+        mSwipeToLoadLayout.post(() -> mSwipeToLoadLayout.setRefreshing(active));
+//        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout)getView().findViewById(R.id.movie_refresh_layout);
+//
+//        // Make sure setRefreshing() is called after the layout is done with everything else.
+//        swipeRefreshLayout.post(() -> {
+//            Log.e(HomeActivity.TAG, "swipeRefreshLayout run() active: " + active);
+//            swipeRefreshLayout.setRefreshing(active);
+//        });
 
     }
 
