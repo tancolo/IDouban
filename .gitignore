@@ -9,3 +9,10 @@
 .idea
 /app/build
 
+/app/jianshu.json
+/app/libs
+/app/src/main/assets/
+/app/src/main/java/cn
+/circleimageview
+
+
