@@ -1,3 +1,8 @@
+#DEPRECATED
+
+使用 [Mooc](https://github.com/tancolo/MOOC/tree/master/android-mvp/IDouban) 替代。
+直接使用Retrofit + Rxjava + MVP开发
+
 # IDouban
 不完全模仿 豆瓣App中书影音信息展示。
 
